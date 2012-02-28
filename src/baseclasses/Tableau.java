@@ -39,6 +39,15 @@ public class Tableau {
     }
     
     /**
+     * Play a given card to the correct pile.
+     * 
+     * @param c 
+     */
+    public void play(Card c) {
+        throw new UnsupportedOperationException("Not Implemented Yet");
+    }
+    
+    /**
      * Play a card to the safety pile.
      * 
      * @param c <code>Card</code> to be played.
