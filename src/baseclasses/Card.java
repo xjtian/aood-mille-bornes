@@ -22,15 +22,18 @@ public class Card {
      */
     protected CardType type;
     private BufferedImage sprite;
-    
+    /**
+     * Whether or not the card is played as a coup-fourre.
+     */
+    protected boolean sideways;
     /**
      * Pixel height of all cards when drawn.
      */
-    public final int CARD_HEIGHT = 688;
+    public static final int CARD_HEIGHT = 688;
     /**
      * Pixel width of all cards when drawn.
      */
-    public final int CARD_WIDTH = 500;
+    public static final int CARD_WIDTH = 500;
     
     /**
      * Creates a new <code>Card</code> object and reads in the appropriate sprite 
@@ -48,6 +51,14 @@ public class Card {
         } catch (IOException ex) {
             sprite = null;
         }
+        sideways = false;
+    }
+    
+    /**
+     * Turns the card sideways, as in a coup-fourre.
+     */
+    public void turnSidways() {
+        sideways = ! sideways;
     }
     
     /**
@@ -61,6 +72,9 @@ public class Card {
      * @param y The y-coordinate of the upper-left corner of the card.
      */
     public void draw(Graphics g, int x, int y) {
-        g.drawImage(sprite, x, y, CARD_WIDTH, CARD_HEIGHT, null);
+        if (!sideways)
+            g.drawImage(sprite, x, y, CARD_WIDTH, CARD_HEIGHT, null);
+        else
+            g.drawImage(sprite, x, y, CARD_HEIGHT, CARD_WIDTH, null);
     }
 }
