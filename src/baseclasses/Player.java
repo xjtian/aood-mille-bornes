@@ -57,7 +57,6 @@ public class Player {
      */
     public Card getCard(int i) {
         return hand.get(i);
-        //throw new UnsupportedOperationException("Not Implemented Yet");
     }
     
     /**
@@ -75,11 +74,7 @@ public class Player {
      * @return the <code>Card</code> object to be played.
      */
     public Card playCard(int i) {
-        Card c = hand.get(i);
-        hand.remove(i);
-        return c;
-        
-       // throw new UnsupportedOperationException("Not Implemented Yet");
+        return hand.get(i);
     }
     
     /**
@@ -91,7 +86,6 @@ public class Player {
      */
     public int getHandSize() {
         return hand.size();
-        // throw new UnsupportedOperationException("Not Implemented Yet");
     }
     
     /**
@@ -113,8 +107,6 @@ public class Player {
      * @return a String representation of the player's hand.
      */
     public String drawHand() {
-        for(int i = 0; i < hand.size(); i++)    {
-        }
         throw new UnsupportedOperationException("Not Implemented Yet");
     }
     
@@ -125,6 +117,5 @@ public class Player {
      */
     public void drawCard(Card c) {
         hand.add(c);
-        //throw new UnsupportedOperationException("Not Implemented Yet");
     }
 }
