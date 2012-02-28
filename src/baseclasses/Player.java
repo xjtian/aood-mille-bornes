@@ -8,7 +8,12 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 /**
- *
+ * A player in a game of Mille Bornes. 
+ * 
+ * This class is "dumb", meaning that all of its methods do not calculate the 
+ * logic behind whether or not a certain move is valid. The public methods of the 
+ * class assume that all logic-checking is done outside.
+ * 
  * @author jacky
  */
 public class Player {
@@ -88,5 +93,14 @@ public class Player {
         for (int i = 0; i < hand.size(); i++) {
             hand.get(i).draw(g, x + (Card.CARD_HEIGHT * i), y);
         }
+    }
+    
+    /**
+     * Return an ASCII-art representation of the player's hand.
+     * 
+     * @return a String representation of the player's hand.
+     */
+    public String drawHand() {
+        throw new UnsupportedOperationException("Not Implemented Yet");
     }
 }

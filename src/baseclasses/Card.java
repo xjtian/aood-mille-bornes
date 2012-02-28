@@ -77,4 +77,23 @@ public class Card {
         else
             g.drawImage(sprite, x, y, CARD_HEIGHT, CARD_WIDTH, null);
     }
+    
+    /**
+     * Draw the card as ASCII-art.
+     * 
+     * @return an ASCII image of the card.
+     */
+    public String draw() {
+        throw new UnsupportedOperationException("Not Implemented Yet");
+    }
+    
+    /**
+     * Get a string representing the card.
+     * 
+     * @return the type of the card.
+     */
+    @Override
+    public String toString() {
+        return type.toString();
+    }
 }
