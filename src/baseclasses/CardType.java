@@ -70,10 +70,13 @@ public enum CardType {
     /**
      * Road service safety.
      */
-    ROAD_SERVICE ("Safety", "safety.png");
+    ROAD_SERVICE ("Safety", "safety.png"),
+    /**
+     * End limit remedy.
+     */
+    END_LIMIT ("End Limit", "unlimited.png");
     
     //removed cards - as per specs
-//    END_LIMIT ("End Limit", "unlimited.png"),
 //    EXTRA_TANK ("Extra Tank Safety", "tanker.png"),
 //    PUNCTURE_PROOF ("Puncture-Proof Safety", "sealant.png"),
 //    DRIVING_ACE ("Diving Ace Safety", "ace.png"),

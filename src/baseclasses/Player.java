@@ -24,11 +24,17 @@ public class Player {
     protected String name;
     
     /**
+     * How many miles the player has accumulated.
+     */
+    protected int miles;
+    
+    /**
      * Default constructor to make a player with no name.
      */
     public Player() {
         hand = new ArrayList<Card>();
         name = "No Name.";
+        miles = 0;
     }
     
     /**
@@ -50,7 +56,8 @@ public class Player {
      * @return the <code>Card</code> at the index.
      */
     public Card getCard(int i) {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+        return hand.get(i);
+        //throw new UnsupportedOperationException("Not Implemented Yet");
     }
     
     /**
@@ -68,7 +75,11 @@ public class Player {
      * @return the <code>Card</code> object to be played.
      */
     public Card playCard(int i) {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+        Card c = hand.get(i);
+        hand.remove(i);
+        return c;
+        
+       // throw new UnsupportedOperationException("Not Implemented Yet");
     }
     
     /**
@@ -79,7 +90,8 @@ public class Player {
      * @return the size of the player's hand.
      */
     public int getHandSize() {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+        return hand.size();
+        // throw new UnsupportedOperationException("Not Implemented Yet");
     }
     
     /**
@@ -101,6 +113,18 @@ public class Player {
      * @return a String representation of the player's hand.
      */
     public String drawHand() {
+        for(int i = 0; i < hand.size(); i++)    {
+        }
         throw new UnsupportedOperationException("Not Implemented Yet");
+    }
+    
+    /**
+     * Player adds a specified card to his/her hand.
+     * 
+     * @param c the card to be drawn.
+     */
+    public void drawCard(Card c) {
+        hand.add(c);
+        //throw new UnsupportedOperationException("Not Implemented Yet");
     }
 }

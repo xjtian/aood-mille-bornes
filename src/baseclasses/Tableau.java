@@ -129,7 +129,45 @@ public class Tableau {
      * @return
      */
     public boolean validMove(Card c) {
+        
+        switch(c.type)   {
+            case D25:
+            case D50:
+                if(isRolling() || battlePile.get(battlePile.size()-1).type == CardType.LIMIT) {
+                    return true;
+                }
+                break;
+            case D75:
+            case D100:
+                //implementation
+                if(isRolling()) {
+                    return true;
+                }
+                
+                break;
+            case D200:  //@TODO: finish this logic
+                
+        }
         throw new UnsupportedOperationException("Not Implemented Yet");
+       
+    }
+    
+    /**
+     * Determine whether or not the player that owns the tableau is rolling.
+     * 
+     * @return True if the player is rolling, False otherwise.
+     */
+    public boolean isRolling()  {
+        Card topBattleCard = battlePile.get(battlePile.size()-1);
+        
+        switch (topBattleCard.type) {
+            case ROAD_SERVICE:
+            case ROLL:
+            case D200:
+                return true;
+            default:
+                return false;
+        }
     }
     
     /**
@@ -140,6 +178,7 @@ public class Tableau {
      * @param y y-coordinate of upper-left corner of the tableau.
      */
     public void draw(Graphics g, int x, int y) {
+        
         throw new UnsupportedOperationException("Not Implemented Yet");
     }
     
