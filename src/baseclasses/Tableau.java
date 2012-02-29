@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package baseclasses;
 
 import java.awt.Graphics;
@@ -20,7 +16,7 @@ import java.util.ArrayList;
  * whether or not a distance card is valid based on how much more distance the player 
  * needs to reach 1000 miles.
  * 
- * @author jacky
+ * @author Jacky Tian, Matt Hemler, Evan M., Ben Ferguson
  */
 public class Tableau {
     /**
@@ -50,7 +46,7 @@ public class Tableau {
      * This method throws an exception in the case of an illegal play. This is 
      * the preferred way to play a card.
      * 
-     * @param c the <code>Card</code> to be played.
+     * @param c <code>Card</code> to be played.
      * @throws Exception Indicates that a play is not valid. 
      */
     public void playCard(Card c) throws Exception {
@@ -240,9 +236,9 @@ public class Tableau {
     /**
      * Draws the tableau.
      * 
-     * @param g graphics object of the component.
-     * @param x x-coordinate of upper-left corner of the tableau.
-     * @param y y-coordinate of upper-left corner of the tableau.
+     * @param g Graphics object of the component.
+     * @param x X-coordinate of upper-left corner of the tableau.
+     * @param y Y-coordinate of upper-left corner of the tableau.
      */
     public void draw(Graphics g, int x, int y) {
         throw new UnsupportedOperationException("Not Implemented Yet");
@@ -251,7 +247,7 @@ public class Tableau {
     /**
      * Return an ASCII-art representation of the tableau.
      * 
-     * @return a String representation of the tableau.
+     * @return A String representation of the tableau.
      */
     public String draw() {
         throw new UnsupportedOperationException("Not Implemented Yet");

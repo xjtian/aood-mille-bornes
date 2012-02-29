@@ -81,7 +81,7 @@ public class Card {
     /**
      * Draw the card as ASCII-art.
      * 
-     * @return an ASCII image of the card.
+     * @return An ASCII image of the card.
      */
     public String draw() {
         throw new UnsupportedOperationException("Not Implemented Yet");
@@ -90,7 +90,7 @@ public class Card {
     /**
      * Get a string representing the card.
      * 
-     * @return the type of the card.
+     * @return The type of the card as a String.
      */
     @Override
     public String toString() {

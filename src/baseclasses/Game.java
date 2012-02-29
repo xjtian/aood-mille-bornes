@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package baseclasses;
 
 import java.awt.Graphics;
@@ -14,7 +10,7 @@ import java.util.ArrayList;
  * is valid. This class is designed so that a "dumb" user interface just passes 
  * a user's attempted moves to the methods to check for legality.
  * 
- * @author xtian8741
+ * @author Jacky Tian
  */
 public class Game {
     private ArrayList<Card> discardPile;
@@ -94,7 +90,7 @@ public class Game {
      * Determine the validity of a given move.
      * 
      * @param player 1 for human, 2 for computer.
-     * @param card index of card to play in the player's hand.
+     * @param card Index of card to play in the player's hand.
      * @return True if the move is legal, false otherwise.
      */
     public boolean validateMove(int player, int card) {
@@ -133,7 +129,7 @@ public class Game {
      * All logic-checking should be done beforehand.
      * 
      * @param player 1 for human, 2 for computer.
-     * @param card index of card to play in the player's hand.
+     * @param card Index of card to play in the player's hand.
      */
     public void makeMove(int player, int card) {
         throw new UnsupportedOperationException("Not Implemented Yet");
@@ -189,7 +185,7 @@ public class Game {
      * Discard a card from a player's hand.
      * 
      * @param player 1 for human, 2 for computer.
-     * @param card index of card to play in the player's hand.
+     * @param card Index of card to play in the player's hand.
      */
     public void discard(int player, int card) {
         throw new UnsupportedOperationException("Not Implemented Yet");
@@ -214,7 +210,7 @@ public class Game {
     /**
      * Draw the game on a component.
      * 
-     * @param g graphics object of the component.
+     * @param g Graphics object of the component.
      */
     public void draw(Graphics g) {
         throw new UnsupportedOperationException("Not Implemented Yet");

@@ -96,7 +96,7 @@ public enum CardType {
      * The path is only the filename and extension - the images are actually under 
      * \images\ under the home directory.
      * 
-     * @return the filename and extension of the sprite.
+     * @return The filename and extension of the sprite.
      */
     public String getPath() {
         return path;
@@ -105,7 +105,7 @@ public enum CardType {
     /**
      * Returns the name of the card as a string.
      * 
-     * @return the name of the card without preceeding or following whitespace.
+     * @return The name of the card without preceeding or following whitespace.
      */
     @Override
     public String toString() {
