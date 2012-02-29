@@ -68,13 +68,18 @@ public enum CardType {
      */
     REPAIR ("Repair", "repair.png"),
     /**
+     * End limit remedy.
+     */
+    END_LIMIT ("End Limit", "unlimited.png"),
+    /**
      * Road service safety.
      */
     ROAD_SERVICE ("Safety", "safety.png"),
     /**
-     * End limit remedy.
+     * Blank card.
      */
-    END_LIMIT ("End Limit", "unlimited.png");
+    BLANK_CARD("Blank Card", "");
+    
     
     //removed cards - as per specs
 //    EXTRA_TANK ("Extra Tank Safety", "tanker.png"),

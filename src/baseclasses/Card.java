@@ -2,7 +2,6 @@ package baseclasses;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -36,22 +35,32 @@ public class Card {
     public static final int CARD_WIDTH = 500;
     
     /**
-     * Creates a new <code>Card</code> object and reads in the appropriate sprite 
-     * as defined by the type as a buffered image.
-     * 
-     * If, for some reason, there is an error reading the image at the specified 
-     * path, the sprite for the card is set to null.
+     * Creates a new <code>Card</code> object without an image at time of 
+     * instantiation.
      * 
      * @param type The <code>CardType</code> of the card.
      */
     public Card(CardType type) {
         this.type = type;
+        sprite = null;
+        sideways = false;
+    }
+    
+    /**
+     * Read in the image of the card as a BufferedImage. This method MUST be called 
+     * before an invocation of <code>draw()</code>.
+     * 
+     * @return True if the operation worked, false if an exception was encountered.
+     */
+    public boolean loadImage() {
         try {
-            sprite = ImageIO.read(new File("images\\" + type.getPath()));
+            sprite = ImageIO.read(getClass().getResource("baseclasses/resources/" + type.getPath()));
         } catch (IOException ex) {
             sprite = null;
+            return false;
         }
-        sideways = false;
+        
+        return true;
     }
     
     /**

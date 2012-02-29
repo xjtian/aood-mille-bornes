@@ -94,33 +94,70 @@ public class Game {
      * @return True if the move is legal, false otherwise.
      */
     public boolean validateMove(int player, int card) {
-        switch (player) {
-            case 1:
-                Card c = humanPlayer.getCard(card);
+        if (player == HUMAN) {
+            Card c = humanPlayer.getCard(card);
                 
-                if (!humanTableau.validMove(c))
+            if (!humanTableau.validMove(c))
+                return false;
+            
+            int distance;
+            switch (c.type) {
+                case D25: 
+                    distance = 25;
+                    break;
+                case D50: 
+                    distance = 50;
+                    break;
+                case D75: 
+                    distance = 75;
+                    break;
+                case D100:
+                    distance = 100;
+                    break;
+                case D200:
+                    distance = 200;
+                    break;
+                default:
                     return false;
+            }
+            
+            if (humanPlayer.miles + distance > 1000)
+                return false;
+            return true;
+        } else if (player == CPU) {
+            Card c = cpuPlayer.getCard(card);
                 
-                //@TODO: determine if the distance is too much
-                int distance;
-                switch (c.type) {
-                    case D25: 
-                        distance = 25;
-                        break;
-                    case D50: 
-                        distance = 50;
-                        break;
-                    case D75: 
-                        distance = 75;
-                        break;
-                    case D100:
-                        distance = 100;
-                        break;
-                        
-                }
+            if (!cpuTableau.validMove(c))
+                return false;
+            
+            int distance;
+            switch (c.type) {
+                case D25: 
+                    distance = 25;
+                    break;
+                case D50: 
+                    distance = 50;
+                    break;
+                case D75: 
+                    distance = 75;
+                    break;
+                case D100:
+                    distance = 100;
+                    break;
+                case D200:
+                    distance = 200;
+                    break;
+                default:
+                    return false;
+            }
+            
+            if (cpuPlayer.miles + distance > 1000)
+                return false;
+            
+            return true;
+        } else {
+            return false;
         }
-        
-        throw new UnsupportedOperationException("Not Implemented Yet");
     }
     
     /**

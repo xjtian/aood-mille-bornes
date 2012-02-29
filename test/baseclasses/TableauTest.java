@@ -12,7 +12,7 @@ import org.junit.*;
 
 /**
  *
- * @author xtian8741
+ * @author jacky
  */
 public class TableauTest {
     
@@ -36,14 +36,14 @@ public class TableauTest {
     }
 
     /**
-     * Test of play method, of class Tableau.
+     * Test of playCard method, of class Tableau.
      */
     @Test
-    public void testPlay() {
-        System.out.println("play");
+    public void testPlayCard() throws Exception {
+        System.out.println("playCard");
         Card c = null;
         Tableau instance = new Tableau();
-        instance.play(c);
+        instance.playCard(c);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

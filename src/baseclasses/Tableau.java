@@ -175,8 +175,19 @@ public class Tableau {
      * @return
      */
     public boolean validMove(Card c) {
-        Card battleTop = battlePile.get(battlePile.size() - 1);
-        Card speedTop = speedPile.get(speedPile.size() - 1);
+        Card battleTop;
+        try {
+            battleTop = battlePile.get(battlePile.size() - 1);
+        } catch (IndexOutOfBoundsException ex) {
+            battleTop = new Card(CardType.BLANK_CARD);
+        }
+        
+        Card speedTop;
+        try {
+            speedTop = speedPile.get(speedPile.size() - 1);
+        } catch (IndexOutOfBoundsException ex) {
+            speedTop = new Card(CardType.BLANK_CARD);
+        }
         
         switch(c.type)   {
             case D25:
