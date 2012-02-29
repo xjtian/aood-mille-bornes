@@ -74,7 +74,7 @@ public class Player {
      * @return the <code>Card</code> object to be played.
      */
     public Card playCard(int i) {
-        return hand.get(i);
+        return hand.remove(i);
     }
     
     /**

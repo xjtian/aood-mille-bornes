@@ -105,6 +105,7 @@ public class Game {
                 if (!humanTableau.validMove(c))
                     return false;
                 
+                //@TODO: determine if the distance is too much
                 int distance;
                 switch (c.type) {
                     case D25: 

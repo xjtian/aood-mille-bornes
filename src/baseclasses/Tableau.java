@@ -12,8 +12,14 @@ import java.util.ArrayList;
  * 
  * This class contains various 'piles' where cards can be played, and logic-checking 
  * capabilities. However, playing a card to a pile still assumes that the move has 
- * been validated beforehand. Therefore, the methods are "dumb", but the class can 
- * be "smart".
+ * been validated beforehand. The public methods that allow a card to be played 
+ * into a specific stack are "dumb" methods, but the <code>playCard()</code> method 
+ * is "smart" because it will throw an exception in the case of an invalid play.
+ * 
+ * Note that the tableau does not check for some cases of invalid plays, such as 
+ * whether or not a distance card is valid based on how much more distance the player 
+ * needs to reach 1000 miles.
+ * 
  * @author jacky
  */
 public class Tableau {
@@ -41,10 +47,44 @@ public class Tableau {
     /**
      * Play a given card to the correct pile.
      * 
-     * @param c 
+     * This method throws an exception in the case of an illegal play. This is 
+     * the preferred way to play a card.
+     * 
+     * @param c the <code>Card</code> to be played.
+     * @throws Exception Indicates that a play is not valid. 
      */
-    public void play(Card c) {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+    public void playCard(Card c) throws Exception {
+        if (!validMove(c))
+            throw new Exception();
+        
+        switch (c.type) {
+            case D25:
+            case D50:
+            case D75:
+            case D100:
+            case D200:
+                playToDistance(c);
+                break;
+            case ACCIDENT:
+            case EMPTY:
+            case FLAT:
+            case STOP:
+                playToBattle(c);
+                break;
+            case LIMIT:
+            case END_LIMIT:
+                playToSpeed(c);
+                break;
+            case GAS:
+            case REPAIR:
+            case ROLL:
+            case SPARE:
+                playToBattle(c);
+                break;
+            case ROAD_SERVICE:
+                playToSafety(c);
+                break;
+        }
     }
     
     /**
@@ -132,33 +172,51 @@ public class Tableau {
      * Test the validity of a move.
      * 
      * Target pile does not have to be specified because that is implied with the 
-     * type of the card.
+     * type of the card. This method does NOT check the legality of a certain distance 
+     * in the event a player is very close to winning (greater than 800 miles).
      * 
      * @param c <code>Card</code> to be potentially played.
      * @return
      */
     public boolean validMove(Card c) {
+        Card battleTop = battlePile.get(battlePile.size() - 1);
+        Card speedTop = speedPile.get(speedPile.size() - 1);
         
         switch(c.type)   {
             case D25:
             case D50:
-                if(isRolling() || battlePile.get(battlePile.size()-1).type == CardType.LIMIT) {
-                    return true;
-                }
-                break;
+                return isRolling();
             case D75:
             case D100:
-                //implementation
-                if(isRolling()) {
+                return (isRolling() && speedTop.type != CardType.LIMIT);
+            case D200:
+                if (isRolling() && speedTop.type != CardType.LIMIT && played200 < 2)
                     return true;
-                }
-                
-                break;
-            case D200:  //@TODO: finish this logic
-                
+                else
+                    return !isRolling();
+            case ACCIDENT:
+            case EMPTY:
+            case FLAT:
+            case STOP:
+                return isRolling();
+            case LIMIT:
+                return (speedTop.type != CardType.LIMIT);
+            case END_LIMIT:
+                return (speedTop.type == CardType.LIMIT);
+            case GAS:
+                return (battleTop.type == CardType.EMPTY);
+            case REPAIR:
+                return (battleTop.type == CardType.ACCIDENT);
+            case ROLL:
+                return !isRolling();
+            case SPARE:
+                return (battleTop.type == CardType.FLAT);
+            case ROAD_SERVICE:
+                return (battleTop.type != CardType.ROLL
+                        || speedTop.type == CardType.LIMIT);
+            default:
+                return false;
         }
-        throw new UnsupportedOperationException("Not Implemented Yet");
-       
     }
     
     /**
@@ -187,7 +245,6 @@ public class Tableau {
      * @param y y-coordinate of upper-left corner of the tableau.
      */
     public void draw(Graphics g, int x, int y) {
-        
         throw new UnsupportedOperationException("Not Implemented Yet");
     }
     
