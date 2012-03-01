@@ -72,9 +72,10 @@ public final class Card {
      * Turns the card sideways, as in a coup-fourre.
      */
     public void turnSideways() {
-        sideways = true;
-        if (sprite != null) {
-            rotateSprite();
+        if (!sideways) {
+            sideways = true;
+            if (sprite != null)
+                rotateSprite();
         }
     }
     
@@ -83,6 +84,8 @@ public final class Card {
         int h = sprite.getHeight();
         BufferedImage dimg = new BufferedImage(w, h, 5);
         Graphics2D g = dimg.createGraphics();
+        g.setBackground(Game.BACKGROUND);
+        g.clearRect(0, 0, w, h);
         g.rotate(Math.PI/2, w/2, h/2);
         g.drawImage(sprite, null, 0, 0);
         
@@ -103,6 +106,7 @@ public final class Card {
     public void draw(Graphics g, int x, int y) {
         if (sprite == null)
             loadImage();
+        
         g.drawImage(sprite, x, y, CARD_WIDTH, CARD_HEIGHT, null);
     }
     
@@ -112,42 +116,7 @@ public final class Card {
      * @return An ASCII image of the card.
      */
     public String draw() {
-        switch(type)    {
-            case D25:
-                return "D25";
-            case D50:
-                return "D50";
-            case D75:
-                return "D75";
-            case D100:
-                return "D100";
-            case D200:
-                return "D200";
-            case STOP:
-                return "!st";
-            case EMPTY:
-                return "!emp";
-            case FLAT:
-                return "!fl";
-            case ACCIDENT:
-                return "!ac";
-            case LIMIT:
-                return "!lim";
-            case ROAD_SERVICE:
-                return "rd_srv";
-            case GAS:
-                return "*gs";
-            case SPARE:
-                return "*sp";
-            case END_LIMIT:
-                return "*end_lm";
-            case REPAIR:
-                return "*rp";
-            case ROLL:
-                return "GO";
-            default:
-                return "_";
-        }
+        return type.getArt();
     }
     
     /**

@@ -14,71 +14,71 @@ public enum CardType {
     /**
      * 25-mile card.
      */
-    D25 ("25 Miles", "25.png"),
+    D25 ("25 Miles", "25.png", "|25|"),
     /**
      * 50-mile card
      */
-    D50 ("50 Miles", "50.png"),
+    D50 ("50 Miles", "50.png", "|50|"),
     /**
      * 75-mile card.
      */
-    D75 ("75 Miles", "75.png"),
+    D75 ("75 Miles", "75.png", "|75|"),
     /**
      * 100-mile card.
      */
-    D100 ("100 Miles", "100.png"),
+    D100 ("100 Miles", "100.png", "|100|"),
     /**
      * 200-mile card.
      */
-    D200 ("200 Miles", "200.png"),
+    D200 ("200 Miles", "200.png", "|200|"),
     /**
      * Stop card.
      */
-    STOP ("Stop", "stop.png"),
+    STOP ("Stop", "stop.png", "|STP|"),
     /**
      * Empty tank hazard.
      */
-    EMPTY ("Out of Gas", "empty.png"),
+    EMPTY ("Out of Gas", "empty.png", "|EMP|"),
     /**
      * Flat tire hazard.
      */
-    FLAT ("Flat Tire", "flat.png"),
+    FLAT ("Flat Tire", "flat.png", "|FLT|"),
     /**
      * Accident hazard.
      */
-    ACCIDENT ("Accident", "crash.png"),
+    ACCIDENT ("Accident", "crash.png", "|AXX|"),
     /**
      * Speed limit hazard.
      */
-    LIMIT ("Speed Limit", "limit.png"),
+    LIMIT ("Speed Limit", "limit.png", "|LIM|"),
     /**
      * Roll/go card.
      */
-    ROLL ("Go", "roll.png"),
+    ROLL ("Go", "roll.png", "|GO|"),
     /**
      * Gas refill remedy.
      */
-    GAS ("Gas Refill", "gas.png"),
+    GAS ("Gas Refill", "gas.png", "|GAS|"),
     /**
      * Spare tire remedy.
      */
-    SPARE ("Spare Tire", "spare.png"),
+    SPARE ("Spare Tire", "spare.png", "|SPR|"),
     /**
      * Repair remedy.
      */
-    REPAIR ("Repair", "repair.png"),
+    REPAIR ("Repair", "repair.png", "|RPR|"),
     /**
      * End limit remedy.
      */
-    END_LIMIT ("End Limit", "unlimited.png"),
+    END_LIMIT ("End Limit", "unlimited.png", "|NLM|"),
     /**
      * Road service safety.
      */
-    ROAD_SERVICE ("Safety", "safety.png"),
+    ROAD_SERVICE ("Safety", "safety.png", "|=)|"),
     /**
      * Blank card.
      */
-    BLANK_CARD("Blank Card", "");
+    BLANK_CARD("Blank Card", "", "|_|");
     
     
     //removed cards - as per specs
@@ -89,10 +89,12 @@ public enum CardType {
     
     private final String name;
     private final String path;
+    private final String ascii;
     
-    CardType(String name, String path) {
+    CardType(String name, String path, String ascii) {
         this.name = name;
         this.path = path;
+        this.ascii = ascii;
     }
     
     /**
@@ -105,6 +107,15 @@ public enum CardType {
      */
     public String getPath() {
         return path;
+    }
+    
+    /**
+     * Get the ascii-art of the card type.
+     * 
+     * @return A 1-line ascii-"art" representation of the card type.
+     */
+    public String getArt() {
+        return ascii;
     }
     
     /**

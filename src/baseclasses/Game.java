@@ -1,5 +1,6 @@
 package baseclasses;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +33,6 @@ public final class Game {
      * Points to the computer player.
      */
     public static final int CPU = 2;
-    
     /**
      * Height of the game when it is painted.
      */
@@ -41,6 +41,11 @@ public final class Game {
      * Width of the game when it is painted.
      */
     public static final int WIDTH = 750;
+    /**
+     * Mandatory color for the background of all GUIs. Hack around black background 
+     * of a rotated BufferedImage.
+     */
+    public static final Color BACKGROUND = Color.LIGHT_GRAY;
     
     /**
      * Instantiates the discard pile and both players and populates the deck.

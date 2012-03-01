@@ -4,37 +4,21 @@
  */
 package baseclasses;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import org.junit.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 /**
- *
- * @author mhemle3133
+ * JUnit test class for <code>Card</code>. Graphic-based methods automatically 
+ * assert to true - it is up to the tester to determine if the cards are painted 
+ * correctly. 
+ * 
+ * @author Jacky Tian, Matt Hemler, Ben Ferguson, Evan M.
  */
 public class CardTest {
-    
-    public CardTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of loadImage method, of class Card.
@@ -54,22 +38,26 @@ public class CardTest {
     @Test
     public void testTurnSideways() {
         System.out.println("turnSideways");
-        JFrame frame = new JFrame();
-        final Card instance = new Card(CardType.D100);
-        instance.loadImage();
-        instance.turnSideways();
+        final Card[] allSprites = new Card[CardType.values().length - 1];
+        for (int i = 0; i < CardType.values().length - 1; i++) {
+            allSprites[i] = new Card(CardType.values()[i]);
+            allSprites[i].turnSideways();
+        }
         
+        JFrame frame = new JFrame();
         frame.add(new JComponent() {
            public void paintComponent(Graphics g) {
-               instance.draw(g, 0, 0);
+               for (int i = 0; i < allSprites.length; i++) {
+                   allSprites[i].draw(g, 0+(Card.CARD_WIDTH*(i%6)), 0+(Card.CARD_HEIGHT*(i/6)));
+               }
            } 
         });
         
-        frame.setVisible(true);
-        frame.setPreferredSize(new Dimension(300, 300));
+        frame.setSize(350, 300);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        while (frame.isVisible()){}
-        assertTrue("Is the Card Sideways?", true);
+        frame.setVisible(true);
+        while (frame.isVisible()) {}
+        assertTrue(true);
     }
 
     /**
@@ -78,13 +66,25 @@ public class CardTest {
     @Test
     public void testDraw_3args() {
         System.out.println("draw");
-//        Graphics g = null;
-//        int x = 0;
-//        int y = 0;
-//        Card instance = null;
-//        instance.draw(g, x, y);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        final Card[] allSprites = new Card[CardType.values().length - 1];
+        for (int i = 0; i < CardType.values().length - 1; i++) {
+            allSprites[i] = new Card(CardType.values()[i]);
+        }
+        
+        JFrame frame = new JFrame();
+        frame.add(new JComponent() {
+           public void paintComponent(Graphics g) {
+               for (int i = 0; i < allSprites.length; i++) {
+                   allSprites[i].draw(g, 0+(Card.CARD_WIDTH*(i%6)), 0+(Card.CARD_HEIGHT*(i/6)));
+               }
+           } 
+        });
+        
+        frame.setSize(350, 300);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setVisible(true);
+        while (frame.isVisible()) {}
+        assertTrue(true);
     }
 
     /**
@@ -93,12 +93,15 @@ public class CardTest {
     @Test
     public void testDraw_0args() {
         System.out.println("draw");
-//        Card instance = null;
-//        String expResult = "";
-//        String result = instance.draw();
-//        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Card instance;
+        String expResult;
+        String result;
+        for (CardType ct : CardType.values()) {
+            instance = new Card(ct);
+            expResult = ct.getArt();
+            result = instance.draw();
+            assertEquals(expResult, result);
+        }
     }
 
     /**
@@ -107,11 +110,15 @@ public class CardTest {
     @Test
     public void testToString() {
         System.out.println("toString");
-//        Card instance = null;
-//        String expResult = "";
-//        String result = instance.toString();
-//        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Card instance;
+        String expResult;
+        String result;
+        
+        for (CardType ct : CardType.values()) {
+            instance = new Card(ct);
+            expResult = ct.toString();
+            result = instance.toString();
+            assertEquals(expResult, result);
+        }
     }
 }
