@@ -34,15 +34,6 @@ public class Player {
     }
     
     /**
-     * Set the player's name.
-     * 
-     * @param name The player's name.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    /**
      * Get the card at specified index in the hand for logic-checking.
      * 
      * The game MUST use this method before a call to <code>playCard()</code> to 

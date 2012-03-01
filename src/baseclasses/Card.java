@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
  * 
  * @author Jacky Tian
  */
-public class Card {
+public final class Card {
     
     /**
      * Which card this card is. Also contains information such as name.
@@ -91,13 +91,16 @@ public class Card {
      * Paints the card on a given component.
      * 
      * This method will draw the card sized as defined by <code>CARD_WIDTH</code> 
-     * and <code>CARD_HEIGHT</code>.
+     * and <code>CARD_HEIGHT</code>. If the image has not been loaded yet, this 
+     * method loads it.
      * 
      * @param g The graphics object of the component to paint on.
      * @param x The x-coordinate of the upper-left corner of the card.
      * @param y The y-coordinate of the upper-left corner of the card.
      */
     public void draw(Graphics g, int x, int y) {
+        if (sprite == null)
+            loadImage();
         g.drawImage(sprite, x, y, CARD_WIDTH, CARD_HEIGHT, null);
     }
     

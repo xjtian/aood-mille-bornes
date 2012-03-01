@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * 
  * @author Jacky Tian, Matt Hemler, Evan M., Ben Ferguson
  */
-public class Tableau {
+public final class Tableau {
     /**
      * How many 200-mile cards have been played to the distance pile.
      */

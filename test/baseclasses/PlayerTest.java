@@ -34,19 +34,6 @@ public class PlayerTest {
     }
 
     /**
-     * Test of setName method, of class Player.
-     */
-    @Test
-    public void testSetName() {
-        System.out.println("setName");
-        String name = "";
-        Player instance = new Player();
-        instance.setName(name);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
      * Test of getCard method, of class Player.
      */
     @Test

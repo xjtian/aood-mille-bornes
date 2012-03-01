@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * 
  * @author Jacky Tian
  */
-public class Game {
+public final class Game {
     private ArrayList<Card> discardPile;
     private ArrayList<Card> deck;
     
@@ -48,6 +48,7 @@ public class Game {
         deck = new ArrayList<Card>();
         humanPlayer = new Player();
         cpuPlayer = new Player();
+        cpuPlayer.name = "Computer";
         
         humanTableau = new Tableau();
         cpuTableau = new Tableau();
@@ -87,6 +88,30 @@ public class Game {
     }
     
     /**
+     * Set the human player's name.
+     * 
+     * @param name The new name.
+     */
+    public void setPlayerName(String name) {
+        humanPlayer.name = name;
+    }
+    
+    /**
+     * Get the specified player's name.
+     * 
+     * @param player Either <code>HUMAN</code> or <code>CPU</code>.
+     * @return The name of the player.
+     */
+    public String getPlayerName(int player) {
+        if (player == HUMAN)
+            return humanPlayer.name;
+        else if (player == CPU)
+            return cpuPlayer.name;
+        else
+            return "Invalid Input";
+    }
+    
+    /**
      * Determine the validity of a given move.
      * 
      * @param player 1 for human, 2 for computer.
@@ -123,6 +148,7 @@ public class Game {
             
             if (humanPlayer.miles + distance > 1000)
                 return false;
+            
             return true;
         } else if (player == CPU) {
             Card c = cpuPlayer.getCard(card);
@@ -165,7 +191,7 @@ public class Game {
      * 
      * All logic-checking should be done beforehand.
      * 
-     * @param player 1 for human, 2 for computer.
+     * @param player Either <code>HUMAN</code> or <code>CPU</code>.
      * @param card Index of card to play in the player's hand.
      */
     public void makeMove(int player, int card) {
@@ -185,7 +211,7 @@ public class Game {
      * Generate a boolean array to indicate which cards in a player's hand are 
      * legal to play.
      * 
-     * @param player 1 for human, 2 for computer.
+     * @param player Either <code>HUMAN</code> or <code>CPU</code>.
      * @return A boolean array with values corresponding to the legality of each 
      * card in the player's hand.
      */
@@ -196,7 +222,7 @@ public class Game {
     /**
      * Determine if the game is over.
      * 
-     * @return 1 if the human won, 2 if the computer won.
+     * @return <code>HUMAN</code> if the human won, <code>CPU</code> if the computer won.
      */
     public int isOver() {
         throw new UnsupportedOperationException("Not Implemented Yet");
@@ -212,7 +238,7 @@ public class Game {
     /**
      * Add the top card of the deck to a player's hand.
      * 
-     * @param player 1 for human, 2 for computer.
+     * @param player Either <code>HUMAN</code> or <code>CPU</code>.
      */
     public void draw(int player) {
         throw new UnsupportedOperationException("Not Implemented Yet");
@@ -221,7 +247,7 @@ public class Game {
     /**
      * Discard a card from a player's hand.
      * 
-     * @param player 1 for human, 2 for computer.
+     * @param player Either <code>HUMAN</code> or <code>CPU</code>.
      * @param card Index of card to play in the player's hand.
      */
     public void discard(int player, int card) {
