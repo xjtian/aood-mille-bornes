@@ -35,13 +35,13 @@ public class CardTest {
     }
 
     /**
-     * Test of turnSidways method, of class Card.
+     * Test of turnSideways method, of class Card.
      */
     @Test
-    public void testTurnSidways() {
-        System.out.println("turnSidways");
+    public void testTurnSideways() {
+        System.out.println("turnSideways");
         Card instance = null;
-        instance.turnSidways();
+        instance.turnSideways();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

@@ -1,6 +1,7 @@
 package baseclasses;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -60,14 +61,30 @@ public class Card {
             return false;
         }
         
+        if (sideways)
+            rotateSprite();
+        
         return true;
     }
     
     /**
      * Turns the card sideways, as in a coup-fourre.
      */
-    public void turnSidways() {
-        sideways = ! sideways;
+    public void turnSideways() {
+        sideways = true;
+        if (sprite != null) {
+            rotateSprite();
+        }
+    }
+    
+    private void rotateSprite() {
+        int w = sprite.getWidth();
+        int h = sprite.getHeight();
+        BufferedImage dimg = new BufferedImage(w, h, sprite.getType());
+        Graphics2D g = dimg.createGraphics();
+        g.rotate(Math.toRadians(90.0), w/2, h/2);
+        g.drawImage(sprite, null, 0, 0);
+        sprite = dimg;
     }
     
     /**
@@ -81,10 +98,7 @@ public class Card {
      * @param y The y-coordinate of the upper-left corner of the card.
      */
     public void draw(Graphics g, int x, int y) {
-        if (!sideways)
-            g.drawImage(sprite, x, y, CARD_WIDTH, CARD_HEIGHT, null);
-        else
-            g.drawImage(sprite, x, y, CARD_HEIGHT, CARD_WIDTH, null);
+        g.drawImage(sprite, x, y, CARD_WIDTH, CARD_HEIGHT, null);
     }
     
     /**
