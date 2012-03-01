@@ -4,14 +4,16 @@
  */
 package baseclasses;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 /**
  *
- * @author xtian8741
+ * @author mhemle3133
  */
 public class CardTest {
     
@@ -35,15 +37,39 @@ public class CardTest {
     }
 
     /**
+     * Test of loadImage method, of class Card.
+     */
+    @Test
+    public void testLoadImage() {
+        System.out.println("loadImage");
+        Card instance = new Card(CardType.D200);
+        boolean expResult = true;
+        boolean result = instance.loadImage();
+        assertEquals(expResult, result);
+    }
+
+    /**
      * Test of turnSideways method, of class Card.
      */
     @Test
     public void testTurnSideways() {
         System.out.println("turnSideways");
-        Card instance = null;
+        JFrame frame = new JFrame();
+        final Card instance = new Card(CardType.D100);
+        instance.loadImage();
         instance.turnSideways();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        frame.add(new JComponent() {
+           public void paintComponent(Graphics g) {
+               instance.draw(g, 0, 0);
+           } 
+        });
+        
+        frame.setVisible(true);
+        frame.setPreferredSize(new Dimension(300, 300));
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        while (frame.isVisible()){}
+        assertTrue("Is the Card Sideways?", true);
     }
 
     /**
@@ -52,11 +78,11 @@ public class CardTest {
     @Test
     public void testDraw_3args() {
         System.out.println("draw");
-        Graphics g = null;
-        int x = 0;
-        int y = 0;
-        Card instance = null;
-        instance.draw(g, x, y);
+//        Graphics g = null;
+//        int x = 0;
+//        int y = 0;
+//        Card instance = null;
+//        instance.draw(g, x, y);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -67,10 +93,10 @@ public class CardTest {
     @Test
     public void testDraw_0args() {
         System.out.println("draw");
-        Card instance = null;
-        String expResult = "";
-        String result = instance.draw();
-        assertEquals(expResult, result);
+//        Card instance = null;
+//        String expResult = "";
+//        String result = instance.draw();
+//        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -81,10 +107,10 @@ public class CardTest {
     @Test
     public void testToString() {
         System.out.println("toString");
-        Card instance = null;
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
+//        Card instance = null;
+//        String expResult = "";
+//        String result = instance.toString();
+//        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+
 /**
  * A card object for the game.
  * 
@@ -29,11 +30,11 @@ public final class Card {
     /**
      * Pixel height of all cards when drawn.
      */
-    public static final int CARD_HEIGHT = 688;
+    public static final int CARD_HEIGHT = 69;
     /**
      * Pixel width of all cards when drawn.
      */
-    public static final int CARD_WIDTH = 500;
+    public static final int CARD_WIDTH = 50;
     
     /**
      * Creates a new <code>Card</code> object without an image at time of 
@@ -55,7 +56,7 @@ public final class Card {
      */
     public boolean loadImage() {
         try {
-            sprite = ImageIO.read(getClass().getResource("baseclasses/resources/" + type.getPath()));
+            sprite = ImageIO.read(Card.class.getClass().getResource("/baseclasses/resources/" + type.getPath()));
         } catch (IOException ex) {
             sprite = null;
             return false;
@@ -80,10 +81,11 @@ public final class Card {
     private void rotateSprite() {
         int w = sprite.getWidth();
         int h = sprite.getHeight();
-        BufferedImage dimg = new BufferedImage(w, h, sprite.getType());
+        BufferedImage dimg = new BufferedImage(w, h, 5);
         Graphics2D g = dimg.createGraphics();
-        g.rotate(Math.toRadians(90.0), w/2, h/2);
+        g.rotate(Math.PI/2, w/2, h/2);
         g.drawImage(sprite, null, 0, 0);
+        
         sprite = dimg;
     }
     
@@ -110,7 +112,42 @@ public final class Card {
      * @return An ASCII image of the card.
      */
     public String draw() {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+        switch(type)    {
+            case D25:
+                return "D25";
+            case D50:
+                return "D50";
+            case D75:
+                return "D75";
+            case D100:
+                return "D100";
+            case D200:
+                return "D200";
+            case STOP:
+                return "!st";
+            case EMPTY:
+                return "!emp";
+            case FLAT:
+                return "!fl";
+            case ACCIDENT:
+                return "!ac";
+            case LIMIT:
+                return "!lim";
+            case ROAD_SERVICE:
+                return "rd_srv";
+            case GAS:
+                return "*gs";
+            case SPARE:
+                return "*sp";
+            case END_LIMIT:
+                return "*end_lm";
+            case REPAIR:
+                return "*rp";
+            case ROLL:
+                return "GO";
+            default:
+                return "_";
+        }
     }
     
     /**
