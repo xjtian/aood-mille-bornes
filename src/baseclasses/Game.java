@@ -2,6 +2,8 @@ package baseclasses;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 /**
  * A Mille Bournes game.
@@ -85,6 +87,15 @@ public final class Game {
         for (int i = 0; i < 8; i++) {
             deck.add(new Card(CardType.ROLL));
         }
+        
+        shuffleDeck();
+    }
+    
+    private void shuffleDeck() {
+        Random r = new Random();
+        for (int i = 0; i < 100; i++) {
+            Collections.swap(deck, r.nextInt(deck.size()), r.nextInt(deck.size()));
+        }
     }
     
     /**
@@ -101,14 +112,15 @@ public final class Game {
      * 
      * @param player Either <code>HUMAN</code> or <code>CPU</code>.
      * @return The name of the player.
+     * @throws Exception Indicates an invalid player code.
      */
-    public String getPlayerName(int player) {
+    public String getPlayerName(int player) throws Exception {
         if (player == HUMAN)
             return humanPlayer.name;
         else if (player == CPU)
             return cpuPlayer.name;
         else
-            return "Invalid Input";
+            throw new Exception("Invalid Player Code");
     }
     
     /**
@@ -214,34 +226,73 @@ public final class Game {
      * @param player Either <code>HUMAN</code> or <code>CPU</code>.
      * @return A boolean array with values corresponding to the legality of each 
      * card in the player's hand.
+     * @throws Exception Indicates an invalid player code.
      */
-    public boolean[] getAllValidPlays(int player) {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+    public boolean[] getAllValidPlays(int player) throws Exception {
+        if (player == HUMAN) {
+            boolean[] output = new boolean[humanPlayer.getHandSize()];
+            for (int i = 0; i < output.length; i++) {
+                output[i] = validateMove(player, i);
+            }
+            
+            return output;
+        } else if (player == CPU) {
+            boolean[] output = new boolean[cpuPlayer.getHandSize()];
+            for (int i = 0; i < output.length; i++) {
+                output[i] = validateMove(player, i);
+            }
+            
+            return output;
+        } else {
+            throw new Exception("Invalid Player Code");
+        }
     }
     
     /**
      * Determine if the game is over.
      * 
-     * @return <code>HUMAN</code> if the human won, <code>CPU</code> if the computer won.
+     * @return <code>HUMAN</code> if the human won, <code>CPU</code> if the 
+     * computer won, or 0 if no winner.
      */
     public int isOver() {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+        if (humanPlayer.miles == 1000)
+            return HUMAN;
+        else if (cpuPlayer.miles == 1000)
+            return CPU;
+        else
+            return 0;
     }
     
     /**
      * Each player draws a 6-card hand.
      */
     public void drawAllCards() {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+        for (int i = 0; i < 6; i++) {
+            humanPlayer.drawCard(deck.remove(0));
+            cpuPlayer.drawCard(deck.remove(0));
+        }
     }
     
     /**
      * Add the top card of the deck to a player's hand.
      * 
      * @param player Either <code>HUMAN</code> or <code>CPU</code>.
+     * @throws Exception Indicates an invalid player code.
      */
-    public void draw(int player) {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+    public void drawCard(int player) throws Exception {
+        if (deck.isEmpty()) {
+            ArrayList<Card> hc = humanTableau.shuffleNewDeck();
+            ArrayList<Card> cc = cpuTableau.shuffleNewDeck();
+            deck.addAll(hc);
+            deck.addAll(cc);
+            shuffleDeck();
+        }
+        if (player == HUMAN)
+            humanPlayer.drawCard(deck.remove(0));
+        else if (player == CPU)
+            cpuPlayer.drawCard(deck.remove(0));
+        else
+            throw new Exception("Invalid Player Code");
     }
     
     /**
@@ -249,16 +300,24 @@ public final class Game {
      * 
      * @param player Either <code>HUMAN</code> or <code>CPU</code>.
      * @param card Index of card to play in the player's hand.
+     * @throws Exception Indicates an invalid player code.
      */
-    public void discard(int player, int card) {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+    public void discard(int player, int card) throws Exception {
+        if (player == HUMAN)
+            discardPile.add(humanPlayer.playCard(card));
+        else if (player == CPU)
+            discardPile.add(cpuPlayer.playCard(card));
+        else
+            throw new Exception("Invalid Player Code");
     }
     
     /**
-     * Quit the game.
+     * Quit the game by nullifying all instance variables.
      */
     public void quit() {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+        cpuPlayer = humanPlayer = null;
+        cpuTableau = humanTableau = null;
+        deck = discardPile = null;
     }
     
     /**
