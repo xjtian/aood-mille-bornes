@@ -51,7 +51,7 @@ public final class Tableau {
      */
     public void playCard(Card c) throws Exception {
         if (!validMove(c))
-            throw new Exception();
+            throw new Exception("Tableau Says Illegal Move");
         
         switch (c.type) {
             case D25:

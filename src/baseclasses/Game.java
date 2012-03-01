@@ -134,8 +134,9 @@ public final class Game {
      * @param player 1 for human, 2 for computer.
      * @param card Index of card to play in the player's hand.
      * @return True if the move is legal, false otherwise.
+     * @throws Exception Indicates an invalid player code.
      */
-    public boolean validateMove(int player, int card) {
+    public boolean validateMove(int player, int card) throws Exception {
         if (player == HUMAN) {
             Card c = humanPlayer.getCard(card);
                 
@@ -199,29 +200,60 @@ public final class Game {
             
             return true;
         } else {
-            return false;
+            throw new Exception("Invalid Player Code");
         }
     }
     
     /**
      * Have a specified player play a specified card.
      * 
-     * All logic-checking should be done beforehand.
-     * 
      * @param player Either <code>HUMAN</code> or <code>CPU</code>.
      * @param card Index of card to play in the player's hand.
+     * @throws Exception Check the message to see if the error is an illegal move, 
+     * invalid player code, or logical differences between Tableau and Game.
      */
-    public void makeMove(int player, int card) {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+    public void makeMove(int player, int card) throws Exception {
+        if (player != HUMAN && player != CPU)
+            throw new Exception("Invalid Player Code");
+        if (!validateMove(player, card))
+            throw new Exception("Illegal Move");
+        
+        if (player == HUMAN) {
+            humanTableau.playCard(humanPlayer.getCard(card));
+            humanPlayer.playCard(card);
+        } else if (player == CPU) {
+            cpuTableau.playCard(cpuPlayer.getCard(card));
+            cpuPlayer.playCard(card);
+        }
     }
     
     /**
      * Generate a random valid move by the CPU player.
      * 
-     * @return Index of the card to play in the CPU player's hand.
+     * @return Index of the card to play in the CPU player's hand. -1 means discard.
      */
     public int generateCPUMove() {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+        //@TODO: Currently Stubbed. Complete the AI algorithm.
+        boolean[] valids = null;
+        try {
+            valids = getAllValidPlays(CPU);
+        } catch (Exception ex) {}
+        
+        int counter = 0;
+        for (int i = 0; i < valids.length; i++) {
+            if (valids[i])
+                counter++;
+        }
+        
+        if (counter == 0)
+            return -1;
+        else {
+            for (int i = 0; i < valids.length; i++) {
+                if (valids[i])
+                    return i;
+            }
+            return -1;
+        }
     }
     
     /**
