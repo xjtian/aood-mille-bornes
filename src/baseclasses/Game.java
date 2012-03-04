@@ -2,6 +2,7 @@ package baseclasses;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -92,6 +93,11 @@ public final class Game {
         for (int i = 0; i < 8; i++) {
             deck.add(new Card(CardType.ROLL));
         }
+        
+        deck.add(new Card(CardType.DRIVING_ACE));
+        deck.add(new Card(CardType.EXTRA_TANK));
+        deck.add(new Card(CardType.PUNCTURE_PROOF));
+        deck.add(new Card(CardType.RIGHT_OF_WAY));
         
         shuffleDeck();
     }
@@ -367,11 +373,30 @@ public final class Game {
     }
     
     /**
+     * Draw an ASCII-art version of the game for text-based UI's.
+     * 
+     * @return A string with all the game data.
+     */
+    public String draw() {
+        throw new UnsupportedOperationException("Not Implemented Yet");
+    }
+    
+    /**
      * Draw the game on a component.
      * 
      * @param g Graphics object of the component.
      */
     public void draw(Graphics g) {
+        throw new UnsupportedOperationException("Not Implemented Yet");
+    }
+    
+    /**
+     * Repaint the portion of the game as bounded by a rectangle.
+     * 
+     * @param g Graphics object of the component.
+     * @param r Bounds to repaint.
+     */
+    public void draw(Graphics g, Rectangle r) {
         throw new UnsupportedOperationException("Not Implemented Yet");
     }
 }

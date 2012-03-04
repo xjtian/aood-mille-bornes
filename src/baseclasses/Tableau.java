@@ -1,5 +1,6 @@
 package baseclasses;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
@@ -78,7 +79,10 @@ public final class Tableau {
                 playToBattle(c);
                 break;
             case ROAD_SERVICE:
-                playToSafety(c);
+                if (!isRolling())
+                    playToBattle(c);
+                else
+                    playToSpeed(c);
                 break;
         }
     }
@@ -149,15 +153,15 @@ public final class Tableau {
             temp.add(safetyPile.remove(i));
         }
         
-        for (int i = speedPile.size() - 2; i >= 0; i++) {
+        for (int i = speedPile.size() - 2; i >= 0; i--) {
             temp.add(speedPile.remove(i));
         }
         
-        for (int i = battlePile.size() - 2; i >= 0; i++) {
+        for (int i = battlePile.size() - 2; i >= 0; i--) {
             temp.add(battlePile.remove(i));
         }
         
-        for (int i = distancePile.size() - 2; i >= 0; i++) {
+        for (int i = distancePile.size() - 2; i >= 0; i--) {
             temp.add(distancePile.remove(i));
         }
         
@@ -169,7 +173,7 @@ public final class Tableau {
      * 
      * Target pile does not have to be specified because that is implied with the 
      * type of the card. This method does NOT check the legality of a certain distance 
-     * in the event a player is very close to winning (greater than 800 miles).
+     * in the event a player is close to winning (greater than 800 miles).
      * 
      * @param c <code>Card</code> to be potentially played.
      * @return
@@ -189,38 +193,77 @@ public final class Tableau {
             speedTop = new Card(CardType.BLANK_CARD);
         }
         
+        boolean hasSpeedLimit = true;
+        for (Card cc : safetyPile) {
+            if (cc.type == CardType.DRIVING_ACE)
+                hasSpeedLimit = false;
+        }
+        hasSpeedLimit = (hasSpeedLimit && speedTop.type == CardType.LIMIT);
+        
+        boolean canplay = true;
         switch(c.type)   {
             case D25:
             case D50:
                 return isRolling();
             case D75:
             case D100:
-                return (isRolling() && speedTop.type != CardType.LIMIT);
+                return (isRolling() && !hasSpeedLimit);
             case D200:
-                if (isRolling() && speedTop.type != CardType.LIMIT && played200 < 2)
+                if (isRolling() && !hasSpeedLimit && played200 < 2)
                     return true;
                 else
                     return !isRolling();
             case ACCIDENT:
+                for (Card cc : safetyPile)
+                    if (cc.type == CardType.RIGHT_OF_WAY)
+                        canplay = false;
+                return (canplay && isRolling());
             case EMPTY:
+                for (Card cc : safetyPile)
+                    if (cc.type == CardType.EXTRA_TANK)
+                        canplay = false;
+                return (canplay && isRolling());
             case FLAT:
+                for (Card cc : safetyPile)
+                    if (cc.type == CardType.PUNCTURE_PROOF)
+                        canplay = false;
+                return (canplay && isRolling());
             case STOP:
                 return isRolling();
             case LIMIT:
-                return (speedTop.type != CardType.LIMIT);
+                for (Card cc : safetyPile)
+                    if (cc.type == CardType.DRIVING_ACE)
+                        canplay = false;
+                return (canplay && speedTop.type != CardType.LIMIT);
             case END_LIMIT:
-                return (speedTop.type == CardType.LIMIT);
+                for (Card cc : safetyPile)
+                    if (cc.type == CardType.DRIVING_ACE)
+                        canplay = false;
+                return (canplay && speedTop.type == CardType.LIMIT);
             case GAS:
-                return (battleTop.type == CardType.EMPTY);
+                for (Card cc : safetyPile)
+                    if (cc.type == CardType.EXTRA_TANK)
+                        canplay = false;
+                return (canplay && battleTop.type == CardType.EMPTY);
             case REPAIR:
-                return (battleTop.type == CardType.ACCIDENT);
+                for (Card cc : safetyPile)
+                    if (cc.type == CardType.RIGHT_OF_WAY)
+                        canplay = false;
+                return (canplay && battleTop.type == CardType.ACCIDENT);
             case ROLL:
                 return !isRolling();
             case SPARE:
-                return (battleTop.type == CardType.FLAT);
+                for (Card cc : safetyPile)
+                    if (cc.type == CardType.PUNCTURE_PROOF)
+                        canplay = false;
+                return (canplay && battleTop.type == CardType.FLAT);
             case ROAD_SERVICE:
-                return (battleTop.type != CardType.ROLL
-                        || speedTop.type == CardType.LIMIT);
+                return !isRolling() && hasSpeedLimit;
+            case DRIVING_ACE:
+            case PUNCTURE_PROOF:
+            case RIGHT_OF_WAY:
+            case EXTRA_TANK:
+                return true;
             default:
                 return false;
         }
@@ -252,7 +295,40 @@ public final class Tableau {
      * @param y Y-coordinate of upper-left corner of the tableau.
      */
     public void draw(Graphics g, int x, int y) {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+        g.setColor(Color.BLACK);
+        
+        if (distancePile.isEmpty()) {
+            g.drawRect(x, y, Card.CARD_WIDTH, Card.CARD_HEIGHT);
+            g.drawString("Dist", x + 1, y + Card.CARD_HEIGHT/2);
+        } else {
+            distancePile.get(distancePile.size() - 1).draw(g, x, y);
+        }
+        
+        int currX = x + Card.CARD_WIDTH + 10;
+        int currY = y;
+        
+        if (battlePile.isEmpty()) {
+            g.drawRect(currX, currY, Card.CARD_WIDTH, Card.CARD_HEIGHT);
+            g.drawString("Battle", currX + 1, currY + Card.CARD_HEIGHT/2);
+        } else {
+            battlePile.get(battlePile.size() - 1).draw(g, currX, currY);
+        }
+        
+        currX += Card.CARD_WIDTH + 10;
+        
+        if (speedPile.isEmpty()) {
+            g.drawRect(currX, currY, Card.CARD_WIDTH, Card.CARD_HEIGHT);
+            g.drawString("Speed", currX + 1, currY + Card.CARD_HEIGHT/2);
+        } else {
+            speedPile.get(speedPile.size() - 1).draw(g, currX, currY);
+        }
+        
+        currX = x - 10;
+        currY += Card.CARD_HEIGHT + 10;
+        
+        for (int i = 0; i < safetyPile.size(); i++) {
+            safetyPile.get(i).draw(g, currX + 10*(i+1) + (Card.CARD_WIDTH*i), currY);
+        }
     }
     
     /**

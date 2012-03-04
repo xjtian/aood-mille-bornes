@@ -74,18 +74,27 @@ public enum CardType {
     /**
      * Road service safety.
      */
-    ROAD_SERVICE ("Safety", "safety.png", "|=)|"),
+    ROAD_SERVICE ("Service", "service.png", "|=)|"),
     /**
      * Blank card.
      */
-    BLANK_CARD("Blank Card", "", "|_|");
-    
-    
-    //removed cards - as per specs
-//    EXTRA_TANK ("Extra Tank Safety", "tanker.png"),
-//    PUNCTURE_PROOF ("Puncture-Proof Safety", "sealant.png"),
-//    DRIVING_ACE ("Diving Ace Safety", "ace.png"),
-//    RIGHT_OF_WAY ("Right-of-Way Safety", "row.png");
+    BLANK_CARD("Blank Card", "", "|_|"),
+    /**
+     * Extra tank/tanker safety.
+     */
+    EXTRA_TANK ("Extra Tank Safety", "tanker.png", "|TANK|"),
+    /**
+     * Puncture-proof safety.
+     */
+    PUNCTURE_PROOF ("Puncture-Proof Safety", "sealant.png", "|SEAL|"),
+    /**
+     * Driving ace safety.
+     */
+    DRIVING_ACE ("Diving Ace Safety", "ace.png", "|ACE|"),
+    /**
+     * Right of way safety.
+     */
+    RIGHT_OF_WAY ("Right-of-Way Safety", "row.png", "|RoW|");
     
     private final String name;
     private final String path;

@@ -46,6 +46,7 @@ public class CardTest {
         
         JFrame frame = new JFrame();
         frame.add(new JComponent() {
+            @Override
            public void paintComponent(Graphics g) {
                for (int i = 0; i < allSprites.length; i++) {
                    allSprites[i].draw(g, 0+(Card.CARD_WIDTH*(i%6)), 0+(Card.CARD_HEIGHT*(i/6)));
@@ -73,6 +74,7 @@ public class CardTest {
         
         JFrame frame = new JFrame();
         frame.add(new JComponent() {
+            @Override
            public void paintComponent(Graphics g) {
                for (int i = 0; i < allSprites.length; i++) {
                    allSprites[i].draw(g, 0+(Card.CARD_WIDTH*(i%6)), 0+(Card.CARD_HEIGHT*(i/6)));
