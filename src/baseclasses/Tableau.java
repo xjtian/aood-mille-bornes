@@ -2,6 +2,7 @@ package baseclasses;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  * 
  * @author Jacky Tian, Matt Hemler, Evan M., Ben Ferguson
  */
-public final class Tableau {
+public final class Tableau implements Serializable {
     /**
      * How many 200-mile cards have been played to the distance pile.
      */

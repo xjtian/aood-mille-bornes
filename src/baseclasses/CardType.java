@@ -1,5 +1,7 @@
 package baseclasses;
 
+import java.io.Serializable;
+
 /**
  * Enumerated type containing all possible cards in the game.
  * 
@@ -10,7 +12,7 @@ package baseclasses;
  * 
  * @author Jacky Tian
  */
-public enum CardType {
+public enum CardType implements Serializable {
     /**
      * 25-mile card.
      */

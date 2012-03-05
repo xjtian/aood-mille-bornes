@@ -2,7 +2,7 @@ package baseclasses;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -16,7 +16,7 @@ import java.util.Random;
  * 
  * @author Jacky Tian
  */
-public final class Game {
+public final class Game implements Serializable {
     private ArrayList<Card> discardPile;
     private ArrayList<Card> deck;
     

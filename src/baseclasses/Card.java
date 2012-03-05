@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 import javax.imageio.ImageIO;
 
 
@@ -16,7 +17,7 @@ import javax.imageio.ImageIO;
  * 
  * @author Jacky Tian
  */
-public final class Card {
+public final class Card implements Serializable {
     
     /**
      * Which card this card is. Also contains information such as name.

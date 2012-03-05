@@ -14,7 +14,7 @@ import org.junit.Test;
 
 /**
  *
- * @author jacky
+ * @author Jacky Tian
  */
 public class TableauTest {
 
@@ -258,15 +258,26 @@ public class TableauTest {
     /**
      * Test of draw method, of class Tableau.
      */
-    @Ignore
     @Test
     public void testDraw_0args() {
         System.out.println("draw");
         Tableau instance = new Tableau();
+        
+        instance.playToBattle(new Card(CardType.ROLL));
+        instance.playToDistance(new Card(CardType.D25));
+        instance.playToSpeed(new Card(CardType.END_LIMIT));
+        instance.playToSafety(new Card(CardType.DRIVING_ACE));
+        instance.playCoupFourre(new Card(CardType.EXTRA_TANK));
+        
+        //This line is up to you - figure out what the output string should be.
         String expResult = "";
-        String result = instance.draw();
+        String result = "";
+        try {
+            result = instance.draw();
+        } catch (UnsupportedOperationException ex) {
+            fail();
+        }
+        
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 }

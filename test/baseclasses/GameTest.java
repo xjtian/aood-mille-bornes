@@ -10,7 +10,7 @@ import org.junit.*;
 
 /**
  *
- * @author jacky
+ * @author Jacky Tian
  */
 public class GameTest {
     

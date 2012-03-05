@@ -1,6 +1,7 @@
 package baseclasses;
 
 import java.awt.Graphics;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  * 
  * @author Jacky Tian, Matt Hemler, Evan M., Ben Ferguson
  */
-public class Player {
+public class Player implements Serializable {
     private ArrayList<Card> hand;
     /**
      * The name of the player.
