@@ -389,14 +389,4 @@ public final class Game {
     public void draw(Graphics g) {
         throw new UnsupportedOperationException("Not Implemented Yet");
     }
-    
-    /**
-     * Repaint the portion of the game as bounded by a rectangle.
-     * 
-     * @param g Graphics object of the component.
-     * @param r Bounds to repaint.
-     */
-    public void draw(Graphics g, Rectangle r) {
-        throw new UnsupportedOperationException("Not Implemented Yet");
-    }
 }

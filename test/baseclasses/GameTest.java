@@ -5,7 +5,6 @@
 package baseclasses;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import static org.junit.Assert.*;
 import org.junit.*;
 
@@ -223,20 +222,6 @@ public class GameTest {
         Graphics g = null;
         Game instance = new Game();
         instance.draw(g);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of draw method, of class Game.
-     */
-    @Test
-    public void testDraw_Graphics_Rectangle() {
-        System.out.println("draw");
-        Graphics g = null;
-        Rectangle r = null;
-        Game instance = new Game();
-        instance.draw(g, r);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

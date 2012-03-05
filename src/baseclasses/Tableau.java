@@ -323,11 +323,11 @@ public final class Tableau {
             speedPile.get(speedPile.size() - 1).draw(g, currX, currY);
         }
         
-        currX = x - 10;
+        currX = x;
         currY += Card.CARD_HEIGHT + 10;
         
         for (int i = 0; i < safetyPile.size(); i++) {
-            safetyPile.get(i).draw(g, currX + 10*(i+1) + (Card.CARD_WIDTH*i), currY);
+            safetyPile.get(i).draw(g, currX + 10*i + (Card.CARD_WIDTH*i), currY);
         }
     }
     
