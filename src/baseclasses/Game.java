@@ -2,10 +2,12 @@ package baseclasses;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import javax.swing.ImageIcon;
 
 /**
  * A Mille Bournes game.
@@ -41,7 +43,7 @@ public class Game implements Serializable {
     /**
      * Width of the game when it is painted.
      */
-    public static final int WIDTH = 500;
+    public static final int WIDTH = 600;
     /**
      * Mandatory color for the background of all GUIs. Hack around black background 
      * of a rotated BufferedImage.
@@ -94,6 +96,18 @@ public class Game implements Serializable {
             deck.add(new Card(CardType.ROLL));
         }
         
+        for (int i = 0; i < 3; i++) {
+            deck.add(new Card(CardType.ACCIDENT));
+            deck.add(new Card(CardType.FLAT));
+            deck.add(new Card(CardType.EMPTY));
+            deck.add(new Card(CardType.LIMIT));
+            deck.add(new Card(CardType.STOP));
+        }
+        
+        deck.add(new Card(CardType.STOP));
+        deck.add(new Card(CardType.STOP));
+        deck.add(new Card(CardType.LIMIT));
+        
         deck.add(new Card(CardType.DRIVING_ACE));
         deck.add(new Card(CardType.EXTRA_TANK));
         deck.add(new Card(CardType.PUNCTURE_PROOF));
@@ -125,13 +139,13 @@ public class Game implements Serializable {
      * @return The name of the player.
      * @throws Exception Indicates an invalid player code.
      */
-    public String getPlayerName(int player) throws Exception {
+    public String getPlayerName(int player) {
         if (player == HUMAN)
             return humanPlayer.name;
         else if (player == CPU)
             return cpuPlayer.name;
         else
-            throw new Exception("Invalid Player Code");
+            return "Invalid Player Code";
     }
     
     /**
@@ -142,12 +156,10 @@ public class Game implements Serializable {
      * @return True if the move is legal, false otherwise.
      * @throws Exception Indicates an invalid player code.
      */
-    public boolean validateMove(int player, int card) throws Exception {
+    public boolean validateMove(int player, int card) {
         if (player == HUMAN) {
             Card c = humanPlayer.getCard(card);
-                
-            if (!humanTableau.validMove(c))
-                return false;
+            
             
             int distance;
             switch (c.type) {
@@ -166,14 +178,20 @@ public class Game implements Serializable {
                 case D200:
                     distance = 200;
                     break;
+                case ACCIDENT:
+                case EMPTY:
+                case FLAT:
+                case STOP:
+                case LIMIT:
+                    return cpuTableau.validMove(c);
                 default:
-                    return false;
+                    return humanTableau.validMove(c);
             }
             
             if (humanPlayer.miles + distance > 1000)
                 return false;
             
-            return true;
+            return humanTableau.validMove(c);
         } else if (player == CPU) {
             Card c = cpuPlayer.getCard(card);
                 
@@ -198,7 +216,7 @@ public class Game implements Serializable {
                     distance = 200;
                     break;
                 default:
-                    return false;
+                    return true;
             }
             
             if (cpuPlayer.miles + distance > 1000)
@@ -206,7 +224,7 @@ public class Game implements Serializable {
             
             return true;
         } else {
-            throw new Exception("Invalid Player Code");
+            return false;
         }
     }
     
@@ -219,16 +237,36 @@ public class Game implements Serializable {
      * invalid player code, or logical differences between Tableau and Game.
      */
     public void makeMove(int player, int card) throws Exception {
-        if (player != HUMAN && player != CPU)
-            throw new Exception("Invalid Player Code");
         if (!validateMove(player, card))
             throw new Exception("Illegal Move");
         
         if (player == HUMAN) {
-            humanTableau.playCard(humanPlayer.getCard(card));
+            Card c = humanPlayer.getCard(card);
+            switch (c.type) {
+                case ACCIDENT:
+                case EMPTY:
+                case LIMIT:
+                case FLAT:
+                case STOP:
+                    cpuTableau.playCard(c);
+                    break;
+                default:
+                    humanTableau.playCard(c);
+            }
             humanPlayer.playCard(card);
         } else if (player == CPU) {
-            cpuTableau.playCard(cpuPlayer.getCard(card));
+            Card c = cpuPlayer.getCard(card);
+            switch (c.type) {
+                case ACCIDENT:
+                case EMPTY:
+                case LIMIT:
+                case FLAT:
+                case STOP:
+                    humanTableau.playCard(c);
+                    break;
+                default:
+                    cpuTableau.playCard(c);
+            }
             cpuPlayer.playCard(card);
         }
     }
@@ -271,7 +309,7 @@ public class Game implements Serializable {
      * card in the player's hand.
      * @throws Exception Indicates an invalid player code.
      */
-    public boolean[] getAllValidPlays(int player) throws Exception {
+    public boolean[] getAllValidPlays(int player) {
         if (player == HUMAN) {
             boolean[] output = new boolean[humanPlayer.getHandSize()];
             for (int i = 0; i < output.length; i++) {
@@ -287,7 +325,7 @@ public class Game implements Serializable {
             
             return output;
         } else {
-            throw new Exception("Invalid Player Code");
+            return new boolean[]{false};
         }
     }
     
@@ -322,7 +360,7 @@ public class Game implements Serializable {
      * @param player Either <code>HUMAN</code> or <code>CPU</code>.
      * @throws Exception Indicates an invalid player code.
      */
-    public void drawCard(int player) throws Exception {
+    public void drawCard(int player) {
         if (deck.isEmpty()) {
             ArrayList<Card> hc = humanTableau.shuffleNewDeck();
             ArrayList<Card> cc = cpuTableau.shuffleNewDeck();
@@ -334,8 +372,6 @@ public class Game implements Serializable {
             humanPlayer.drawCard(deck.remove(0));
         else if (player == CPU)
             cpuPlayer.drawCard(deck.remove(0));
-        else
-            throw new Exception("Invalid Player Code");
     }
     
     /**
@@ -345,13 +381,11 @@ public class Game implements Serializable {
      * @param card Index of card to play in the player's hand.
      * @throws Exception Indicates an invalid player code.
      */
-    public void discard(int player, int card) throws Exception {
+    public void discard(int player, int card) {
         if (player == HUMAN)
             discardPile.add(humanPlayer.playCard(card));
         else if (player == CPU)
             discardPile.add(cpuPlayer.playCard(card));
-        else
-            throw new Exception("Invalid Player Code");
     }
     
     /**
@@ -392,19 +426,17 @@ public class Game implements Serializable {
         for (int i = 0; i < humanPlayer.getHandSize(); i++) {
             humanPlayer.getCard(i).draw(g, 20 + (Card.CARD_WIDTH + 10) * i, 4*Card.CARD_HEIGHT + 50);
         }
+        
+        g.drawString("Discard Here", 20 + (Card.CARD_WIDTH + 10) * 7, 4*Card.CARD_HEIGHT + 50);
     }
     
     /**
-     * Draw a card from a player's hand in a different position than the hand.
+     * Get the sprite of a specified card in the player's hand as an <code>ImageIcon</code>.
      * 
-     * @param g Graphics object of the component.
-     * @param card Which card in the user's hand to move.
-     * @param x X-coordinate of the top-left corner of the card.
-     * @param y Y-coordinate of the top-left corner of the card.
+     * @param card Index of the card in the player's hand.
+     * @return An <code>ImageIcon</code> that contains a scaled version of the sprite.
      */
-    public void moveCard(Graphics g, int card, int x, int y) {
-        g.setColor(Game.BACKGROUND);
-        //g.fillRect(20 + (Card.CARD_WIDTH + 10) * card, 4*Card.CARD_HEIGHT + 50, Card.CARD_WIDTH, Card.CARD_HEIGHT);
-        humanPlayer.getCard(card).draw(g, x, y);
+    public ImageIcon getCardIcon(int card) {
+        return new ImageIcon(humanPlayer.getCard(card).sprite.getScaledInstance(Card.CARD_WIDTH, Card.CARD_HEIGHT, Image.SCALE_FAST));
     }
 }

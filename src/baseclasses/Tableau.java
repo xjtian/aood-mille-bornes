@@ -60,9 +60,13 @@ public final class Tableau implements Serializable {
             case D50:
             case D75:
             case D100:
-            case D200:
                 playToDistance(c);
                 break;
+            case D200:
+                if (isRolling())
+                    playToDistance(c);
+                else
+                    playToBattle(c);
             case ACCIDENT:
             case EMPTY:
             case FLAT:
@@ -85,6 +89,11 @@ public final class Tableau implements Serializable {
                 else
                     playToSpeed(c);
                 break;
+            case DRIVING_ACE:
+            case PUNCTURE_PROOF:
+            case RIGHT_OF_WAY:
+            case EXTRA_TANK:
+                playToSafety(c);
         }
     }
     
@@ -183,14 +192,14 @@ public final class Tableau implements Serializable {
         Card battleTop;
         try {
             battleTop = battlePile.get(battlePile.size() - 1);
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (ArrayIndexOutOfBoundsException ex) {
             battleTop = new Card(CardType.BLANK_CARD);
         }
         
         Card speedTop;
         try {
             speedTop = speedPile.get(speedPile.size() - 1);
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (ArrayIndexOutOfBoundsException ex) {
             speedTop = new Card(CardType.BLANK_CARD);
         }
         
@@ -212,8 +221,16 @@ public final class Tableau implements Serializable {
             case D200:
                 if (isRolling() && !hasSpeedLimit && played200 < 2)
                     return true;
-                else
-                    return !isRolling();
+                else {
+                    switch (battleTop.type) {
+                        case ACCIDENT:
+                        case EMPTY:
+                        case FLAT:
+                            return false;
+                        default:
+                            return !isRolling();
+                    }
+                }
             case ACCIDENT:
                 for (Card cc : safetyPile)
                     if (cc.type == CardType.RIGHT_OF_WAY)
@@ -259,7 +276,7 @@ public final class Tableau implements Serializable {
                         canplay = false;
                 return (canplay && battleTop.type == CardType.FLAT);
             case ROAD_SERVICE:
-                return !isRolling() && hasSpeedLimit;
+                return !isRolling() || hasSpeedLimit;
             case DRIVING_ACE:
             case PUNCTURE_PROOF:
             case RIGHT_OF_WAY:
@@ -276,9 +293,14 @@ public final class Tableau implements Serializable {
      * @return True if the player is rolling, False otherwise.
      */
     public boolean isRolling()  {
-        Card topBattleCard = battlePile.get(battlePile.size()-1);
+        Card battleTop;
+        try {
+            battleTop = battlePile.get(battlePile.size() - 1);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            return false;
+        }
         
-        switch (topBattleCard.type) {
+        switch (battleTop.type) {
             case ROAD_SERVICE:
             case ROLL:
             case D200:

@@ -23,7 +23,7 @@ public final class Card implements Serializable {
      * Which card this card is. Also contains information such as name.
      */
     protected CardType type;
-    private BufferedImage sprite;
+    protected BufferedImage sprite;
     /**
      * Whether or not the card is played as a coup-fourre.
      */

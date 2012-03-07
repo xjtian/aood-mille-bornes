@@ -9,7 +9,10 @@ import baseclasses.Game;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.Random;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,13 +28,15 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
     
     private GameComponent gameViewer;
     private MouseHandler mouseHandler;
+    private LayeredComponent dragViewer;
 
     /**
      * Creates new form MainGUI
      */
     public MainGUI() {
         gameViewer = new GameComponent();
-        gameViewer.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
+        dragViewer = new LayeredComponent();
+        gameViewer.add(dragViewer, BorderLayout.CENTER);
         
         mouseHandler = new MouseHandler();
         game = new Game();
@@ -105,6 +110,7 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
          */
         java.awt.EventQueue.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 new MainGUI().setVisible(true);
             }
@@ -114,45 +120,76 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
     @Override
     public void run() {
         while (stopFlag) {
-            getUserAction();
-            makeAIMove();
+            getUserAction(true);
+            makeAIMove(true);
         }
     }
     
-    private void getUserAction() {
-//        try {
-//            game.drawCard(Game.HUMAN);
-//        } catch (Exception ex) {
-//            showDeadlyErrorMessage();
-//        }
+    private void getUserAction(boolean draw) {
+        if (draw)
+            game.drawCard(Game.HUMAN);
         
         int choice = -1;
         while (choice == -1) {
             choice = mouseHandler.getCardClick();
         }
         
+        JLabel draggedCard = new JLabel(game.getCardIcon(choice));
+        draggedCard.setSize(new Dimension(Card.CARD_WIDTH, Card.CARD_HEIGHT));
+        dragViewer.add(draggedCard);
+        Point point = mouseHandler.getDragPoint();
+        
         while (!mouseHandler.getDoneDrag()) {
-            Point point = mouseHandler.getDragPoint();
+            point = mouseHandler.getDragPoint();
             
-            
+            draggedCard.setBounds(point.x, point.y, Card.CARD_WIDTH, Card.CARD_HEIGHT);
         }
         
-        repaint();
+        dragViewer.removeAll();
+        dragViewer.repaint();
         
-        //@TODO: process the action
+        if (point.y < 3 * Card.CARD_HEIGHT + 40) {
+            try {
+                game.makeMove(Game.HUMAN, choice);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Invalid Move!", "Error", JOptionPane.ERROR_MESSAGE);
+                getUserAction(false);
+            }
+        } else {
+            game.discard(Game.HUMAN, choice);
+        }
         
         mouseHandler.resetClickPoint();
     }
     
-    private void makeAIMove() {
-        
+    private void makeAIMove(boolean draw) {
+        if (draw)
+            game.drawCard(Game.CPU);
+            
+        int choice = game.generateCPUMove();
+        if (choice == -1) {
+            game.discard(Game.CPU, new Random().nextInt(6));
+        } else {
+            try {
+                game.makeMove(Game.CPU, choice);
+            } catch (Exception ex) {
+                makeAIMove(false);
+            }
+        }
     }
     
     private void showDeadlyErrorMessage() {
         JOptionPane.showMessageDialog(this, "Deadly Error Encountered", "Deadly Error", JOptionPane.ERROR_MESSAGE);
+        System.exit(0);
     }
     
     private class GameComponent extends JComponent {
+        public GameComponent() {
+            super();
+            setLayout(new BorderLayout());
+            setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
+        }
+        
         @Override
         public void paintComponent(Graphics g) {
             Image offImage = createImage(Game.WIDTH, Game.HEIGHT);
@@ -163,6 +200,14 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
             game.draw(offGraphics);
             
             g.drawImage(offImage, 0, 0, null);
+        }
+    }
+    
+    private class LayeredComponent extends JComponent {
+        public LayeredComponent() {
+            super();
+            setOpaque(false);
+            setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
         }
     }
     
@@ -184,7 +229,7 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
             synchronized(lock) {
                 drag = me.getPoint();
 
-                if (drag.y > 4*Card.CARD_HEIGHT + 50 && drag.y < 5*Card.CARD_HEIGHT + 50) {
+                if (drag.y >= 4*Card.CARD_HEIGHT + 50 && drag.y <= 5*Card.CARD_HEIGHT + 50) {
                     int adjx = drag.x - 20;
                     card = adjx / (Card.CARD_WIDTH + 10);
                     if (card > 6)
@@ -200,6 +245,7 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
             synchronized(lock) {
                 doneDrag = true;
                 card = -1;
+                drag = new Point(-1, -1);
             }
         }
         
