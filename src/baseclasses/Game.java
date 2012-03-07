@@ -16,7 +16,7 @@ import java.util.Random;
  * 
  * @author Jacky Tian
  */
-public final class Game implements Serializable {
+public class Game implements Serializable {
     private ArrayList<Card> discardPile;
     private ArrayList<Card> deck;
     
@@ -41,7 +41,7 @@ public final class Game implements Serializable {
     /**
      * Width of the game when it is painted.
      */
-    public static final int WIDTH = 750;
+    public static final int WIDTH = 500;
     /**
      * Mandatory color for the background of all GUIs. Hack around black background 
      * of a rotated BufferedImage.
@@ -387,6 +387,24 @@ public final class Game implements Serializable {
      * @param g Graphics object of the component.
      */
     public void draw(Graphics g) {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+        cpuTableau.draw(g, 20, 20);
+        humanTableau.draw(g, 20, 2*Card.CARD_HEIGHT + 40);
+        for (int i = 0; i < humanPlayer.getHandSize(); i++) {
+            humanPlayer.getCard(i).draw(g, 20 + (Card.CARD_WIDTH + 10) * i, 4*Card.CARD_HEIGHT + 50);
+        }
+    }
+    
+    /**
+     * Draw a card from a player's hand in a different position than the hand.
+     * 
+     * @param g Graphics object of the component.
+     * @param card Which card in the user's hand to move.
+     * @param x X-coordinate of the top-left corner of the card.
+     * @param y Y-coordinate of the top-left corner of the card.
+     */
+    public void moveCard(Graphics g, int card, int x, int y) {
+        g.setColor(Game.BACKGROUND);
+        g.fillRect(20 + (Card.CARD_WIDTH + 10) * card, 4*Card.CARD_HEIGHT + 50, Card.CARD_WIDTH, Card.CARD_HEIGHT);
+        humanPlayer.getCard(card).draw(g, x, y);
     }
 }
