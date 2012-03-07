@@ -46,7 +46,7 @@ public class Game implements Serializable {
      * Mandatory color for the background of all GUIs. Hack around black background 
      * of a rotated BufferedImage.
      */
-    public static final Color BACKGROUND = Color.LIGHT_GRAY;
+    public static final Color BACKGROUND = Color.WHITE;
     
     /**
      * Instantiates the discard pile and both players and populates the deck.
@@ -404,7 +404,7 @@ public class Game implements Serializable {
      */
     public void moveCard(Graphics g, int card, int x, int y) {
         g.setColor(Game.BACKGROUND);
-        g.fillRect(20 + (Card.CARD_WIDTH + 10) * card, 4*Card.CARD_HEIGHT + 50, Card.CARD_WIDTH, Card.CARD_HEIGHT);
+        //g.fillRect(20 + (Card.CARD_WIDTH + 10) * card, 4*Card.CARD_HEIGHT + 50, Card.CARD_WIDTH, Card.CARD_HEIGHT);
         humanPlayer.getCard(card).draw(g, x, y);
     }
 }

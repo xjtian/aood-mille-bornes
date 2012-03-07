@@ -4,28 +4,55 @@
  */
 package gui_classes;
 
+import baseclasses.Card;
 import baseclasses.Game;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author xtian8741
  */
-public class MainGUI extends javax.swing.JFrame {
+public final class MainGUI extends javax.swing.JFrame implements Runnable {
     
     private Thread t;
+    private boolean stopFlag;
+    
     private Game game;
+    
+    private GameComponent gameViewer;
+    private MouseHandler mouseHandler;
 
     /**
      * Creates new form MainGUI
      */
     public MainGUI() {
+        gameViewer = new GameComponent();
+        gameViewer.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
+        
+        mouseHandler = new MouseHandler();
+        game = new Game();
+        game.drawAllCards();
+        
+        stopFlag = true;
+        
+        this.add(gameViewer, BorderLayout.CENTER);
+        this.addMouseListener(mouseHandler);
+        this.addMouseMotionListener(mouseHandler);
         initComponents();
+        startGame();
+    }
+    
+    private void startGame() {
+        String name = JOptionPane.showInputDialog(this, "What is your name?", 
+                "Name", JOptionPane.QUESTION_MESSAGE);
+        game.setPlayerName(name);
+        
+        t = new Thread(this, "Game Loop");
+        t.start();
     }
 
     /**
@@ -38,17 +65,6 @@ public class MainGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -94,9 +110,51 @@ public class MainGUI extends javax.swing.JFrame {
             }
         });
     }
+
+    @Override
+    public void run() {
+        while (stopFlag) {
+            getUserAction();
+            makeAIMove();
+        }
+    }
+    
+    private void getUserAction() {
+//        try {
+//            game.drawCard(Game.HUMAN);
+//        } catch (Exception ex) {
+//            showDeadlyErrorMessage();
+//        }
+        
+        int choice = -1;
+        while (choice == -1) {
+            choice = mouseHandler.getCardClick();
+        }
+        
+        while (!mouseHandler.getDoneDrag()) {
+            Point point = mouseHandler.getDragPoint();
+            
+            
+        }
+        
+        repaint();
+        
+        //@TODO: process the action
+        
+        mouseHandler.resetClickPoint();
+    }
+    
+    private void makeAIMove() {
+        
+    }
+    
+    private void showDeadlyErrorMessage() {
+        JOptionPane.showMessageDialog(this, "Deadly Error Encountered", "Deadly Error", JOptionPane.ERROR_MESSAGE);
+    }
     
     private class GameComponent extends JComponent {
-        public void drawComponent(Graphics g) {
+        @Override
+        public void paintComponent(Graphics g) {
             Image offImage = createImage(Game.WIDTH, Game.HEIGHT);
             Graphics offGraphics = offImage.getGraphics();
             offGraphics.setColor(Game.BACKGROUND);
@@ -109,17 +167,66 @@ public class MainGUI extends javax.swing.JFrame {
     }
     
     private class MouseHandler extends MouseAdapter {
-        private Point drag = new Point(0, 0);
+        private Point drag = new Point(-1, -1);
         private int card = -1;
+        private boolean doneDrag = true;
+        private final Object lock = new Object();
         
         @Override
         public void mouseDragged(MouseEvent me) {
-            drag = me.getPoint();
+            synchronized(lock) {
+                drag = me.getPoint();
+            }
         }
         
         @Override
         public void mousePressed(MouseEvent me) {
-            //@TODO: calculate card index from click point
+            synchronized(lock) {
+                drag = me.getPoint();
+
+                if (drag.y > 4*Card.CARD_HEIGHT + 50 && drag.y < 5*Card.CARD_HEIGHT + 50) {
+                    int adjx = drag.x - 20;
+                    card = adjx / (Card.CARD_WIDTH + 10);
+                    if (card > 6)
+                        card = -1;
+                }
+                
+                doneDrag = false;
+            }
+        }
+        
+        @Override
+        public void mouseReleased(MouseEvent me) {
+            synchronized(lock) {
+                doneDrag = true;
+                card = -1;
+            }
+        }
+        
+        public boolean getDoneDrag() {
+            synchronized(lock) {
+                return doneDrag;
+            }
+        }
+        
+        public Point getDragPoint() {
+            synchronized(lock) {
+                return drag;
+            }
+        }
+        
+        public int getCardClick() {
+            synchronized(lock) {
+                return card;
+            }
+        }
+        
+        public void resetClickPoint() {
+            synchronized(lock) {
+                drag = new Point(-1,-1);
+                card = -1;
+                doneDrag = true;
+            }
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
