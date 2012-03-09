@@ -9,7 +9,6 @@ import baseclasses.Game;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.util.Random;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -44,7 +43,10 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
         
         stopFlag = true;
         
-        this.add(gameViewer, BorderLayout.CENTER);
+        rootPane.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
+        rootPane.setLayout(new BorderLayout());
+        rootPane.add(gameViewer, BorderLayout.CENTER);
+        
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseHandler);
         initComponents();
@@ -121,7 +123,9 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
     public void run() {
         while (stopFlag) {
             getUserAction(true);
+            checkWin();
             makeAIMove(true);
+            checkWin();
         }
     }
     
@@ -178,6 +182,19 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
         }
     }
     
+    private void checkWin() {
+        switch (game.isOver()) {
+            case Game.HUMAN:
+                JOptionPane.showMessageDialog(this, "Human Player Wins!", "Winner", JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
+                break;
+            case Game.CPU:
+                JOptionPane.showMessageDialog(this, "CPU Wins!", "Loser", JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
+                break;
+        }
+    }
+    
     private void showDeadlyErrorMessage() {
         JOptionPane.showMessageDialog(this, "Deadly Error Encountered", "Deadly Error", JOptionPane.ERROR_MESSAGE);
         System.exit(0);
@@ -212,10 +229,17 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
     }
     
     private class MouseHandler extends MouseAdapter {
-        private Point drag = new Point(-1, -1);
-        private int card = -1;
-        private boolean doneDrag = true;
+        private Point drag;
+        private int card;
+        private boolean doneDrag;
         private final Object lock = new Object();
+        
+        public MouseHandler() {
+            super();
+            drag = new Point(-1, -1);
+            card = -1;
+            doneDrag = true;
+        }
         
         @Override
         public void mouseDragged(MouseEvent me) {

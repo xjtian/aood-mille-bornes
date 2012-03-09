@@ -48,8 +48,7 @@ public class Player implements Serializable {
     }
     
     /**
-     * Play the card at the index in the hand specified by <code>i</code> and 
-     * adds the appropriate distance to the player's total.
+     * Remove the card at the specified index in the hand.
      * 
      * This method assumes the logic behind whether or not the move is a valid 
      * play has already been satisfied, and removes and returns the card at the 
@@ -63,14 +62,6 @@ public class Player implements Serializable {
      * @return <code>Card</code> object to be played.
      */
     public Card playCard(int i) {
-        switch (hand.get(i).type) {
-            case D25: miles += 25; break;
-            case D50: miles += 50; break;
-            case D75: miles += 75; break;
-            case D100: miles += 100; break;
-            case D200: miles += 200; break;
-        }
-        
         return hand.remove(i);
     }
     

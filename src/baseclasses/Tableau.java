@@ -67,6 +67,7 @@ public final class Tableau implements Serializable {
                     playToDistance(c);
                 else
                     playToBattle(c);
+                break;
             case ACCIDENT:
             case EMPTY:
             case FLAT:

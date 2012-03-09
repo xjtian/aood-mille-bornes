@@ -243,6 +243,27 @@ public class Game implements Serializable {
         if (player == HUMAN) {
             Card c = humanPlayer.getCard(card);
             switch (c.type) {
+                case D25: 
+                    humanPlayer.miles += 25; 
+                    humanTableau.playCard(c);
+                    break;
+                case D50: 
+                    humanPlayer.miles += 50; 
+                    humanTableau.playCard(c); 
+                    break;
+                case D75: 
+                    humanPlayer.miles += 75; 
+                    humanTableau.playCard(c); 
+                    break;
+                case D100: 
+                    humanPlayer.miles += 100; 
+                    humanTableau.playCard(c); 
+                    break;
+                case D200:
+                    if (humanTableau.isRolling())
+                        humanPlayer.miles += 200;
+                    humanTableau.playCard(c);
+                    break;
                 case ACCIDENT:
                 case EMPTY:
                 case LIMIT:
@@ -257,6 +278,27 @@ public class Game implements Serializable {
         } else if (player == CPU) {
             Card c = cpuPlayer.getCard(card);
             switch (c.type) {
+                case D25: 
+                    cpuPlayer.miles += 25; 
+                    cpuTableau.playCard(c);
+                    break;
+                case D50: 
+                    cpuPlayer.miles += 50; 
+                    cpuTableau.playCard(c); 
+                    break;
+                case D75: 
+                    cpuPlayer.miles += 75; 
+                    cpuTableau.playCard(c); 
+                    break;
+                case D100: 
+                    cpuPlayer.miles += 100; 
+                    cpuTableau.playCard(c); 
+                    break;
+                case D200:
+                    if (cpuTableau.isRolling())
+                        cpuPlayer.miles += 200;
+                    cpuTableau.playCard(c);
+                    break;
                 case ACCIDENT:
                 case EMPTY:
                 case LIMIT:
@@ -423,6 +465,8 @@ public class Game implements Serializable {
     public void draw(Graphics g) {
         cpuTableau.draw(g, 20, 20);
         humanTableau.draw(g, 20, 2*Card.CARD_HEIGHT + 40);
+        g.drawString("CPU: " + cpuPlayer.miles, 5*Card.CARD_WIDTH + 30, 20);
+        g.drawString("Human: " + humanPlayer.miles, 5*Card.CARD_WIDTH + 30, 40);
         for (int i = 0; i < humanPlayer.getHandSize(); i++) {
             humanPlayer.getCard(i).draw(g, 20 + (Card.CARD_WIDTH + 10) * i, 4*Card.CARD_HEIGHT + 50);
         }
