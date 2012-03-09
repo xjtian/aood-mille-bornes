@@ -320,10 +320,7 @@ public class Game implements Serializable {
      */
     public int generateCPUMove() {
         //@TODO: Currently Stubbed. Complete the AI algorithm.
-        boolean[] valids = null;
-        try {
-            valids = getAllValidPlays(CPU);
-        } catch (Exception ex) {}
+        boolean[] valids = getAllValidPlays(CPU);
         
         int counter = 0;
         for (int i = 0; i < valids.length; i++) {
