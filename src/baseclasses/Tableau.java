@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.ArrayList;
+import javax.swing.JComponent;
 
 /**
  * Tableau of cards in front of a player. 
@@ -191,18 +192,17 @@ public final class Tableau implements Serializable {
      */
     public boolean validMove(Card c) {
         Card battleTop;
-        try {
+        if (! battlePile.isEmpty())
             battleTop = battlePile.get(battlePile.size() - 1);
-        } catch (ArrayIndexOutOfBoundsException ex) {
+        else
             battleTop = new Card(CardType.BLANK_CARD);
-        }
+        
         
         Card speedTop;
-        try {
+        if (! speedPile.isEmpty())
             speedTop = speedPile.get(speedPile.size() - 1);
-        } catch (ArrayIndexOutOfBoundsException ex) {
+        else
             speedTop = new Card(CardType.BLANK_CARD);
-        }
         
         boolean hasSpeedLimit = true;
         for (Card cc : safetyPile) {
@@ -295,11 +295,10 @@ public final class Tableau implements Serializable {
      */
     public boolean isRolling()  {
         Card battleTop;
-        try {
+        if (! battlePile.isEmpty())
             battleTop = battlePile.get(battlePile.size() - 1);
-        } catch (ArrayIndexOutOfBoundsException ex) {
+        else
             return false;
-        }
         
         switch (battleTop.type) {
             case ROAD_SERVICE:
@@ -353,6 +352,49 @@ public final class Tableau implements Serializable {
         for (int i = 0; i < safetyPile.size(); i++) {
             safetyPile.get(i).draw(g, currX + 10*i + (Card.CARD_WIDTH*i), currY);
         }
+    }
+    
+    public JComponent getComponent() {
+        JComponent component = new JComponent() {
+            public void paintComponent(Graphics g) {
+                removeAll();
+                
+                if (!distancePile.isEmpty()) {
+                    JComponent dtop = distancePile.get(distancePile.size() - 1).getComponent();
+                    this.add(dtop);
+                    dtop.setBounds(0, 0, Card.CARD_WIDTH, Card.CARD_HEIGHT);
+
+                }
+
+                int currX = Card.CARD_WIDTH + 10;
+                int currY = 0;
+
+                if (!battlePile.isEmpty()) {
+                    JComponent btop = battlePile.get(battlePile.size() - 1).getComponent();
+                    this.add(btop);
+                    btop.setBounds(currX, currY, Card.CARD_WIDTH, Card.CARD_HEIGHT);
+                }
+
+                currX += Card.CARD_WIDTH + 10;
+
+                if (!speedPile.isEmpty()) {
+                    JComponent stop = speedPile.get(speedPile.size() - 1).getComponent();
+                    this.add(stop);
+                    stop.setBounds(currX, currY, Card.CARD_WIDTH, Card.CARD_HEIGHT);
+                }
+
+                currX = 0;
+                currY += Card.CARD_HEIGHT + 10;
+
+                for (int i = 0; i < safetyPile.size(); i++) {
+                    JComponent temp = safetyPile.get(i).getComponent();
+                    this.add(temp);
+                    temp.setBounds(currX + (Card.CARD_WIDTH + 10) * i, currY, Card.CARD_WIDTH, Card.CARD_HEIGHT);
+                }
+            }
+        };
+        
+        return component;
     }
     
     /**

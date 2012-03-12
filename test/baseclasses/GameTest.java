@@ -4,6 +4,7 @@
  */
 package baseclasses;
 
+import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -159,11 +160,8 @@ public class GameTest {
     public void testDraw_Graphics() {
         game.drawAllCards();
         JFrame frame = new JFrame();
-        frame.add(new JComponent() {
-            public void paintComponent(Graphics g) {
-                game.draw(g);
-            }
-        });
+        frame.setLayout(new BorderLayout());
+        frame.add(game.getComponent(), BorderLayout.CENTER);
         frame.setSize(Game.WIDTH, Game.HEIGHT);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setVisible(true);

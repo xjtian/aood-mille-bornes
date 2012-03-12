@@ -28,35 +28,40 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
     private GameComponent gameViewer;
     private MouseHandler mouseHandler;
     private LayeredComponent dragViewer;
+    
+    private JComponent gameComponent;
 
     /**
      * Creates new form MainGUI
      */
     public MainGUI() {
-        gameViewer = new GameComponent();
-        dragViewer = new LayeredComponent();
-        gameViewer.add(dragViewer, BorderLayout.CENTER);
+//        gameViewer = new GameComponent();
+//        dragViewer = new LayeredComponent();
+//        gameViewer.add(dragViewer, BorderLayout.CENTER);
         
         mouseHandler = new MouseHandler();
         game = new Game();
         game.drawAllCards();
         
+        gameComponent = game.getComponent();
+        
         stopFlag = true;
         
         rootPane.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
         rootPane.setLayout(new BorderLayout());
-        rootPane.add(gameViewer, BorderLayout.CENTER);
+        rootPane.add(gameComponent, BorderLayout.CENTER);
         
-        this.addMouseListener(mouseHandler);
-        this.addMouseMotionListener(mouseHandler);
+//        rootPane.add(gameViewer, BorderLayout.CENTER);
+        
+        //this.addMouseListener(mouseHandler);
         initComponents();
         startGame();
     }
     
     private void startGame() {
-        String name = JOptionPane.showInputDialog(this, "What is your name?", 
-                "Name", JOptionPane.QUESTION_MESSAGE);
-        game.setPlayerName(name);
+//        String name = JOptionPane.showInputDialog(this, "What is your name?", 
+//                "Name", JOptionPane.QUESTION_MESSAGE);
+//        game.setPlayerName(name);
         
         t = new Thread(this, "Game Loop");
         t.start();
@@ -124,8 +129,10 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
         while (stopFlag) {
             getUserAction(true);
             checkWin();
+            repaint();
             makeAIMove(true);
             checkWin();
+            repaint();
         }
     }
     
@@ -133,37 +140,18 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
         if (draw)
             game.drawCard(Game.HUMAN);
         
-        int choice = -1;
-        while (choice == -1) {
-            choice = mouseHandler.getCardClick();
-        }
         
-        JLabel draggedCard = new JLabel(game.getCardIcon(choice));
-        draggedCard.setSize(new Dimension(Card.CARD_WIDTH, Card.CARD_HEIGHT));
-        dragViewer.add(draggedCard);
-        Point point = mouseHandler.getDragPoint();
         
-        while (!mouseHandler.getDoneDrag()) {
-            point = mouseHandler.getDragPoint();
-            
-            draggedCard.setBounds(point.x, point.y, Card.CARD_WIDTH, Card.CARD_HEIGHT);
-        }
+//        Point click = new Point(0, 0);
         
-        dragViewer.removeAll();
-        dragViewer.repaint();
+//        while (gameComponent.getComponentAt(click) == null || gameComponent.getComponentAt(click).getName() == null) {
+//            click = mouseHandler.getCardClick();
+//        }
         
-        if (point.y < 3 * Card.CARD_HEIGHT + 40) {
-            try {
-                game.makeMove(Game.HUMAN, choice);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Invalid Move!", "Error", JOptionPane.ERROR_MESSAGE);
-                getUserAction(false);
-            }
-        } else {
-            game.discard(Game.HUMAN, choice);
-        }
+        System.out.println("Click");
         
-        mouseHandler.resetClickPoint();
+        mouseHandler.resetClick();
+        while (true) {}
     }
     
     private void makeAIMove(boolean draw) {
@@ -228,74 +216,63 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
         }
     }
     
-    private class MouseHandler extends MouseAdapter {
-        private Point drag;
-        private int card;
-        private boolean doneDrag;
+    private class CardDragHandler extends MouseAdapter {
+        private boolean done;
         private final Object lock = new Object();
         
-        public MouseHandler() {
+        public CardDragHandler() {
             super();
-            drag = new Point(-1, -1);
-            card = -1;
-            doneDrag = true;
+            done = true;
         }
         
         @Override
         public void mouseDragged(MouseEvent me) {
             synchronized(lock) {
-                drag = me.getPoint();
-            }
-        }
-        
-        @Override
-        public void mousePressed(MouseEvent me) {
-            synchronized(lock) {
-                drag = me.getPoint();
-
-                if (drag.y >= 4*Card.CARD_HEIGHT + 50 && drag.y <= 5*Card.CARD_HEIGHT + 50) {
-                    int adjx = drag.x - 20;
-                    card = adjx / (Card.CARD_WIDTH + 10);
-                    if (card > 6)
-                        card = -1;
-                }
-                
-                doneDrag = false;
+                System.out.println("Drag");
+                me.getComponent().setBounds(me.getXOnScreen(), me.getYOnScreen(), Card.CARD_WIDTH, Card.CARD_HEIGHT);
+                done = false;
             }
         }
         
         @Override
         public void mouseReleased(MouseEvent me) {
             synchronized(lock) {
-                doneDrag = true;
-                card = -1;
-                drag = new Point(-1, -1);
+                done = true;
             }
         }
         
-        public boolean getDoneDrag() {
+        public boolean isDoneDrag() {
             synchronized(lock) {
-                return doneDrag;
+                return done;
+            }
+        }
+    }
+    
+    private class MouseHandler extends MouseAdapter {
+        private Point click;
+        private final Object lock = new Object();
+        
+        public MouseHandler() {
+            super();
+            click = new Point(0, 0);
+        }
+        
+        @Override
+        public void mousePressed(MouseEvent me) {
+            synchronized(lock) {
+                click = me.getPoint();
             }
         }
         
-        public Point getDragPoint() {
+        public Point getCardClick() {
             synchronized(lock) {
-                return drag;
+                return click;
             }
         }
         
-        public int getCardClick() {
+        public void resetClick() {
             synchronized(lock) {
-                return card;
-            }
-        }
-        
-        public void resetClickPoint() {
-            synchronized(lock) {
-                drag = new Point(-1,-1);
-                card = -1;
-                doneDrag = true;
+                click = new Point(0, 0);
             }
         }
     }

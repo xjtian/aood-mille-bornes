@@ -3,11 +3,14 @@ package baseclasses;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 
 /**
  * A Mille Bournes game.
@@ -469,6 +472,31 @@ public class Game implements Serializable {
         }
         
         g.drawString("Discard Here", 20 + (Card.CARD_WIDTH + 10) * 7, 4*Card.CARD_HEIGHT + 50);
+    }
+    
+    public JComponent getComponent() {
+        JComponent component = new JComponent() {
+            public void paintComponent(Graphics g) {
+                removeAll();
+                
+                JComponent ctc = cpuTableau.getComponent();
+                this.add(ctc);
+                ctc.setBounds(20, 20, (Card.CARD_WIDTH + 10) * 4, Card.CARD_HEIGHT*2 + 10);
+
+                JComponent htc = humanTableau.getComponent();
+                this.add(htc);
+                htc.setBounds(20, 2*Card.CARD_HEIGHT + 40, (Card.CARD_WIDTH + 10)*4, Card.CARD_HEIGHT * 2 + 10);
+
+                for (int i = 0; i < humanPlayer.getHandSize(); i++) {
+                    JComponent temp = humanPlayer.getCard(i).getComponent();
+                    temp.setName("Card");
+                    this.add(temp);
+                    temp.setBounds(20 + (Card.CARD_WIDTH + 10) * i, 4 * Card.CARD_HEIGHT + 50, Card.CARD_WIDTH, Card.CARD_HEIGHT);
+                }
+            }
+        };
+        
+        return component;
     }
     
     /**
