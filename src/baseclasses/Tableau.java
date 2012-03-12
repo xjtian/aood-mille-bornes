@@ -96,6 +96,7 @@ public final class Tableau implements Serializable {
             case RIGHT_OF_WAY:
             case EXTRA_TANK:
                 playToSafety(c);
+                break;
         }
     }
     
