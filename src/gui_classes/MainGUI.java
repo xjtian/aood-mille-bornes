@@ -4,14 +4,12 @@
  */
 package gui_classes;
 
-import baseclasses.Card;
 import baseclasses.Game;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,9 +23,9 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
     
     private Game game;
     
-    private GameComponent gameViewer;
+    //private GameComponent gameViewer;
     private MouseHandler mouseHandler;
-    private LayeredComponent dragViewer;
+    //private LayeredComponent dragViewer;
     
     private JComponent gameComponent;
 
@@ -53,7 +51,7 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
         
 //        rootPane.add(gameViewer, BorderLayout.CENTER);
         
-        //this.addMouseListener(mouseHandler);
+        this.addMouseListener(mouseHandler);
         initComponents();
         startGame();
     }
@@ -127,12 +125,12 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
     @Override
     public void run() {
         while (stopFlag) {
+            repaint();
             getUserAction(true);
             checkWin();
             repaint();
             makeAIMove(true);
             checkWin();
-            repaint();
         }
     }
     
@@ -140,18 +138,11 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
         if (draw)
             game.drawCard(Game.HUMAN);
         
-        
-        
-//        Point click = new Point(0, 0);
-        
-//        while (gameComponent.getComponentAt(click) == null || gameComponent.getComponentAt(click).getName() == null) {
-//            click = mouseHandler.getCardClick();
-//        }
-        
-        System.out.println("Click");
+        for (Component c : gameComponent.getComponents()) {
+            System.out.println(c.getName());
+        }
         
         mouseHandler.resetClick();
-        while (true) {}
     }
     
     private void makeAIMove(boolean draw) {
@@ -165,7 +156,7 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
             try {
                 game.makeMove(Game.CPU, choice);
             } catch (Exception ex) {
-                makeAIMove(false);
+                System.out.println("Invalid Move?");
             }
         }
     }
@@ -213,38 +204,6 @@ public final class MainGUI extends javax.swing.JFrame implements Runnable {
             super();
             setOpaque(false);
             setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
-        }
-    }
-    
-    private class CardDragHandler extends MouseAdapter {
-        private boolean done;
-        private final Object lock = new Object();
-        
-        public CardDragHandler() {
-            super();
-            done = true;
-        }
-        
-        @Override
-        public void mouseDragged(MouseEvent me) {
-            synchronized(lock) {
-                System.out.println("Drag");
-                me.getComponent().setBounds(me.getXOnScreen(), me.getYOnScreen(), Card.CARD_WIDTH, Card.CARD_HEIGHT);
-                done = false;
-            }
-        }
-        
-        @Override
-        public void mouseReleased(MouseEvent me) {
-            synchronized(lock) {
-                done = true;
-            }
-        }
-        
-        public boolean isDoneDrag() {
-            synchronized(lock) {
-                return done;
-            }
         }
     }
     

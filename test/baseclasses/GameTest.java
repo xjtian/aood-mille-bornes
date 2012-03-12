@@ -5,14 +5,10 @@
 package baseclasses;
 
 import java.awt.BorderLayout;
-import java.awt.Graphics;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.WindowConstants;
-import static org.junit.Assert.*;
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  *

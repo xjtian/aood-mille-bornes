@@ -476,14 +476,17 @@ public class Game implements Serializable {
     
     public JComponent getComponent() {
         JComponent component = new JComponent() {
+            @Override
             public void paintComponent(Graphics g) {
                 removeAll();
                 
                 JComponent ctc = cpuTableau.getComponent();
+                ctc.setName("cpuTableau");
                 this.add(ctc);
                 ctc.setBounds(20, 20, (Card.CARD_WIDTH + 10) * 4, Card.CARD_HEIGHT*2 + 10);
 
                 JComponent htc = humanTableau.getComponent();
+                htc.setName("humanTableau");
                 this.add(htc);
                 htc.setBounds(20, 2*Card.CARD_HEIGHT + 40, (Card.CARD_WIDTH + 10)*4, Card.CARD_HEIGHT * 2 + 10);
 
