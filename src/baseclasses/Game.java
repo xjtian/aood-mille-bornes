@@ -121,7 +121,7 @@ public class Game implements Serializable {
     
     private void shuffleDeck() {
         Random r = new Random();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 150; i++) {
             Collections.swap(deck, r.nextInt(deck.size()), r.nextInt(deck.size()));
         }
     }
@@ -483,23 +483,31 @@ public class Game implements Serializable {
                 JComponent ctc = cpuTableau.getComponent();
                 ctc.setName("cpuTableau");
                 this.add(ctc);
-                ctc.setBounds(20, 20, (Card.CARD_WIDTH + 10) * 4, Card.CARD_HEIGHT*2 + 10);
+                ctc.setBounds(0, 0, (Card.CARD_WIDTH + 10) * 4, Card.CARD_HEIGHT*2 + 10);
 
                 JComponent htc = humanTableau.getComponent();
                 htc.setName("humanTableau");
                 this.add(htc);
-                htc.setBounds(20, 2*Card.CARD_HEIGHT + 40, (Card.CARD_WIDTH + 10)*4, Card.CARD_HEIGHT * 2 + 10);
+                htc.setBounds(0, 2*Card.CARD_HEIGHT + 40, (Card.CARD_WIDTH + 10)*4, Card.CARD_HEIGHT * 2 + 10);
 
-                for (int i = 0; i < humanPlayer.getHandSize(); i++) {
-                    JComponent temp = humanPlayer.getCard(i).getComponent();
-                    temp.setName("Card");
-                    this.add(temp);
-                    temp.setBounds(20 + (Card.CARD_WIDTH + 10) * i, 4 * Card.CARD_HEIGHT + 50, Card.CARD_WIDTH, Card.CARD_HEIGHT);
-                }
+//                for (int i = 0; i < humanPlayer.getHandSize(); i++) {
+//                    JComponent temp = humanPlayer.getCard(i).getComponent();
+//                    temp.setName("Card");
+//                    this.add(temp);
+//                    temp.setBounds(20 + (Card.CARD_WIDTH + 10) * i, 4 * Card.CARD_HEIGHT + 50, Card.CARD_WIDTH, Card.CARD_HEIGHT);
+//                }
             }
         };
         
         return component;
+    }
+    
+    public int getPlayerHandSize() {
+        return humanPlayer.getHandSize();
+    }
+    
+    public javax.swing.JLabel getCardLabel(int card) {
+        return humanPlayer.getCard(card).getComponent();
     }
     
     /**
@@ -509,6 +517,7 @@ public class Game implements Serializable {
      * @return An <code>ImageIcon</code> that contains a scaled version of the sprite.
      */
     public ImageIcon getCardIcon(int card) {
+        humanPlayer.getCard(card).loadImage();
         return new ImageIcon(humanPlayer.getCard(card).sprite.getScaledInstance(Card.CARD_WIDTH, Card.CARD_HEIGHT, Image.SCALE_FAST));
     }
 }

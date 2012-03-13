@@ -134,7 +134,7 @@ public final class Card implements Serializable {
         return type.toString();
     }
     
-    public javax.swing.JComponent getComponent() {
+    public javax.swing.JLabel getComponent() {
         if (sprite == null)
             loadImage();
         return new javax.swing.JLabel(new ImageIcon(sprite.getScaledInstance(
