@@ -3,14 +3,11 @@ package baseclasses;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 
 /**
  * A Mille Bournes game.
@@ -163,7 +160,6 @@ public class Game implements Serializable {
         if (player == HUMAN) {
             Card c = humanPlayer.getCard(card);
             
-            
             int distance;
             switch (c.type) {
                 case D25: 
@@ -198,9 +194,6 @@ public class Game implements Serializable {
         } else if (player == CPU) {
             Card c = cpuPlayer.getCard(card);
                 
-            if (!cpuTableau.validMove(c))
-                return false;
-            
             int distance;
             switch (c.type) {
                 case D25: 
@@ -218,14 +211,20 @@ public class Game implements Serializable {
                 case D200:
                     distance = 200;
                     break;
+                case ACCIDENT:
+                case EMPTY:
+                case FLAT:
+                case STOP:
+                case LIMIT:
+                    return humanTableau.validMove(c);
                 default:
-                    return true;
+                    return cpuTableau.validMove(c);
             }
             
             if (cpuPlayer.miles + distance > 1000)
                 return false;
             
-            return true;
+            return cpuTableau.validMove(c);
         } else {
             return false;
         }
@@ -430,6 +429,15 @@ public class Game implements Serializable {
             discardPile.add(cpuPlayer.playCard(card));
     }
     
+    public int getMiles(int player) {
+        if (player == HUMAN)
+            return humanPlayer.miles;
+        else if (player == CPU)
+            return cpuPlayer.miles;
+        else
+            return -1;
+    }
+    
     /**
      * Quit the game by nullifying all instance variables.
      */
@@ -474,40 +482,22 @@ public class Game implements Serializable {
         g.drawString("Discard Here", 20 + (Card.CARD_WIDTH + 10) * 7, 4*Card.CARD_HEIGHT + 50);
     }
     
-    public JComponent getComponent() {
-        JComponent component = new JComponent() {
-            @Override
-            public void paintComponent(Graphics g) {
-                removeAll();
-                
-                JComponent ctc = cpuTableau.getComponent();
-                ctc.setName("cpuTableau");
-                this.add(ctc);
-                ctc.setBounds(0, 0, (Card.CARD_WIDTH + 10) * 4, Card.CARD_HEIGHT*2 + 10);
-
-                JComponent htc = humanTableau.getComponent();
-                htc.setName("humanTableau");
-                this.add(htc);
-                htc.setBounds(0, 2*Card.CARD_HEIGHT + 40, (Card.CARD_WIDTH + 10)*4, Card.CARD_HEIGHT * 2 + 10);
-
-//                for (int i = 0; i < humanPlayer.getHandSize(); i++) {
-//                    JComponent temp = humanPlayer.getCard(i).getComponent();
-//                    temp.setName("Card");
-//                    this.add(temp);
-//                    temp.setBounds(20 + (Card.CARD_WIDTH + 10) * i, 4 * Card.CARD_HEIGHT + 50, Card.CARD_WIDTH, Card.CARD_HEIGHT);
-//                }
-            }
-        };
-        
-        return component;
+    public ImageIcon getTableauIcon(int player, int pile) {
+        if (player == HUMAN)
+            return humanTableau.getTableauIcon(pile);
+        else if (player == CPU)
+            return cpuTableau.getTableauIcon(pile);
+        else
+            return null;
     }
     
-    public int getPlayerHandSize() {
-        return humanPlayer.getHandSize();
-    }
-    
-    public javax.swing.JLabel getCardLabel(int card) {
-        return humanPlayer.getCard(card).getComponent();
+    public ArrayList<ImageIcon> getSafetyIcons(int player) {
+        if (player == HUMAN)
+            return humanTableau.getSafetyIcons();
+        else if (player == CPU)
+            return cpuTableau.getSafetyIcons();
+        else
+            return null;
     }
     
     /**
@@ -517,7 +507,8 @@ public class Game implements Serializable {
      * @return An <code>ImageIcon</code> that contains a scaled version of the sprite.
      */
     public ImageIcon getCardIcon(int card) {
-        humanPlayer.getCard(card).loadImage();
+        if (humanPlayer.getCard(card).sprite == null)
+            humanPlayer.getCard(card).loadImage();
         return new ImageIcon(humanPlayer.getCard(card).sprite.getScaledInstance(Card.CARD_WIDTH, Card.CARD_HEIGHT, Image.SCALE_FAST));
     }
 }

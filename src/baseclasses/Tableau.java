@@ -2,9 +2,10 @@ package baseclasses;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
-import javax.swing.JComponent;
+import javax.swing.ImageIcon;
 
 /**
  * Tableau of cards in front of a player. 
@@ -26,6 +27,10 @@ public final class Tableau implements Serializable {
      * How many 200-mile cards have been played to the distance pile.
      */
     protected int played200;
+    
+    public static final int BATTLE = 1;
+    public static final int SPEED = 2;
+    public static final int DISTANCE = 3;
     
     private ArrayList<Card> safetyPile;
     private ArrayList<Card> speedPile;
@@ -162,10 +167,6 @@ public final class Tableau implements Serializable {
     public ArrayList<Card> shuffleNewDeck() {
         ArrayList<Card> temp = new ArrayList<Card>();
         
-        for (int i = safetyPile.size() - 2; i >= 0; i--) {
-            temp.add(safetyPile.remove(i));
-        }
-        
         for (int i = speedPile.size() - 2; i >= 0; i--) {
             temp.add(speedPile.remove(i));
         }
@@ -271,7 +272,19 @@ public final class Tableau implements Serializable {
                         canplay = false;
                 return (canplay && battleTop.type == CardType.ACCIDENT);
             case ROLL:
-                return !isRolling();
+                switch (battleTop.type) {
+                    case STOP:
+                    case GAS:
+                    case REPAIR:
+                    case SPARE:
+                        return true;
+                    case ACCIDENT:
+                    case EMPTY:
+                    case FLAT:
+                        return false;
+                    default:
+                        return !isRolling();
+                }
             case SPARE:
                 for (Card cc : safetyPile)
                     if (cc.type == CardType.PUNCTURE_PROOF)
@@ -355,47 +368,46 @@ public final class Tableau implements Serializable {
         }
     }
     
-    public JComponent getComponent() {
-        JComponent component = new JComponent() {
-            public void paintComponent(Graphics g) {
-                removeAll();
-                
-                if (!distancePile.isEmpty()) {
-                    JComponent dtop = distancePile.get(distancePile.size() - 1).getComponent();
-                    this.add(dtop);
-                    dtop.setBounds(0, 0, Card.CARD_WIDTH, Card.CARD_HEIGHT);
-
-                }
-
-                int currX = Card.CARD_WIDTH + 10;
-                int currY = 0;
-
-                if (!battlePile.isEmpty()) {
-                    JComponent btop = battlePile.get(battlePile.size() - 1).getComponent();
-                    this.add(btop);
-                    btop.setBounds(currX, currY, Card.CARD_WIDTH, Card.CARD_HEIGHT);
-                }
-
-                currX += Card.CARD_WIDTH + 10;
-
-                if (!speedPile.isEmpty()) {
-                    JComponent stop = speedPile.get(speedPile.size() - 1).getComponent();
-                    this.add(stop);
-                    stop.setBounds(currX, currY, Card.CARD_WIDTH, Card.CARD_HEIGHT);
-                }
-
-                currX = 0;
-                currY += Card.CARD_HEIGHT + 10;
-
-                for (int i = 0; i < safetyPile.size(); i++) {
-                    JComponent temp = safetyPile.get(i).getComponent();
-                    this.add(temp);
-                    temp.setBounds(currX + (Card.CARD_WIDTH + 10) * i, currY, Card.CARD_WIDTH, Card.CARD_HEIGHT);
-                }
-            }
-        };
+    public ImageIcon getTableauIcon(int pile) {
+        Card top;
         
-        return component;
+        switch (pile) {
+            case BATTLE:
+                if (! battlePile.isEmpty())
+                    top = battlePile.get(battlePile.size() - 1);
+                else
+                    return null;
+                break;
+            case DISTANCE:
+                if (! distancePile.isEmpty())
+                    top = distancePile.get(distancePile.size() - 1);
+                else
+                    return null;
+                break;
+            case SPEED:
+                if (! speedPile.isEmpty())
+                    top = speedPile.get(speedPile.size() - 1);
+                else
+                    return null;
+                break;
+            default:
+                return null;
+        }
+        
+        if (top.sprite == null)
+            top.loadImage();
+        return new ImageIcon(top.sprite.getScaledInstance(Card.CARD_WIDTH, Card.CARD_HEIGHT, Image.SCALE_FAST));
+    }
+    
+    public ArrayList<ImageIcon> getSafetyIcons() {
+        ArrayList<ImageIcon> back = new ArrayList<ImageIcon>();
+        for (Card c : safetyPile) {
+            if (c.sprite == null)
+                c.loadImage();
+            back.add(new ImageIcon(c.sprite.getScaledInstance(Card.CARD_WIDTH, Card.CARD_HEIGHT, Image.SCALE_FAST)));
+        }
+        
+        return back;
     }
     
     /**
