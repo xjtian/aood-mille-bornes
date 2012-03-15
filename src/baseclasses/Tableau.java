@@ -335,6 +335,21 @@ public final class Tableau implements Serializable {
             case ROLL:
             case D200:
                 return true;
+            case ACCIDENT:
+                for (Card c : safetyPile)
+                    if (c.type == CardType.RIGHT_OF_WAY)
+                        return true;
+                return false;
+            case EMPTY:
+                for (Card c : safetyPile)
+                    if (c.type == CardType.EXTRA_TANK)
+                        return true;
+                return false;
+            case FLAT:
+                for (Card c : safetyPile)
+                    if (c.type == CardType.PUNCTURE_PROOF)
+                        return true;
+                return false;
             default:
                 return false;
         }
