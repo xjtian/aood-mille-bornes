@@ -407,6 +407,9 @@ public class Game implements Serializable {
             ArrayList<Card> cc = cpuTableau.shuffleNewDeck();
             deck.addAll(hc);
             deck.addAll(cc);
+            for (int i = discardPile.size() - 1; i > 0; i--) {
+                deck.add(discardPile.remove(i));
+            }
             shuffleDeck();
         }
         if (player == HUMAN)

@@ -51,6 +51,7 @@ public class ManualFrame extends javax.swing.JFrame {
         regenIcons();
     }
     
+    // <editor-fold defaultstate="collapsed" desc="Layout Methods">
     private void resetCards() {
 	javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -148,6 +149,7 @@ public class ManualFrame extends javax.swing.JFrame {
         resetCards();
         pack();
     }
+    // </editor-fold>
 
     private void makeUserMove(int card) {
         try {
@@ -269,7 +271,8 @@ public class ManualFrame extends javax.swing.JFrame {
         public PlayingPanel() {
             initComponents();
         }
-
+        
+        // <editor-fold defaultstate="collapsed" desc="Initialization Code">
         private void initComponents() {
             cpuDist = new javax.swing.JLabel();
             cpuBattle = new javax.swing.JLabel();
@@ -386,6 +389,7 @@ public class ManualFrame extends javax.swing.JFrame {
                     .addContainerGap())
             );
         }
+        // </editor-fold>
         
         public void updateTableaus() {
             cpuBattle.setIcon(game.getTableauIcon(Game.CPU, Tableau.BATTLE));
