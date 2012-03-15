@@ -157,6 +157,22 @@ public final class Tableau implements Serializable {
     }
     
     /**
+     * Return the <code>CardType</code> of the last card to be played to the battle 
+     * pile. For coup-fourres.
+     * 
+     * @return The <code>CardType</code> of the top battle pile card, 
+     * <code>BLANK_CARD</code> if the battle pile is empty.
+     */
+    public CardType getBattleTopType() {
+        CardType top;
+        if (!battlePile.isEmpty())
+            top = battlePile.get(battlePile.size() - 1).type;
+        else
+            top = CardType.BLANK_CARD;
+        return top;
+    }
+    
+    /**
      * Remove and return every card in each stack except the top card.
      * 
      * This method will clear out the stacks so that they either only contain the 

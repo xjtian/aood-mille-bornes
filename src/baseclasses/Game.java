@@ -45,10 +45,11 @@ public class Game implements Serializable {
      */
     public static final int WIDTH = 600;
     /**
-     * Mandatory color for the background of all GUIs. Hack around black background 
+     * Mandatory color for the background of all GUIs. Note that this is the default 
+     * background color for all swing components. Hack around black background 
      * of a rotated BufferedImage.
      */
-    public static final Color BACKGROUND = Color.WHITE;
+    public static final Color BACKGROUND = new Color(238, 238, 238);
     
     /**
      * Instantiates the discard pile and both players and populates the deck.
@@ -235,10 +236,11 @@ public class Game implements Serializable {
      * 
      * @param player Either <code>HUMAN</code> or <code>CPU</code>.
      * @param card Index of card to play in the player's hand.
+     * @return True if the computer played a hazard, false otherwise (for coup-fourre).
      * @throws Exception Check the message to see if the error is an illegal move, 
      * invalid player code, or logical differences between Tableau and Game.
      */
-    public void makeMove(int player, int card) throws Exception {
+    public boolean makeMove(int player, int card) throws Exception {
         if (!validateMove(player, card))
             throw new Exception("Illegal Move");
         
@@ -277,6 +279,7 @@ public class Game implements Serializable {
                     humanTableau.playCard(c);
             }
             humanPlayer.playCard(card);
+            return false;
         } else if (player == CPU) {
             Card c = cpuPlayer.getCard(card);
             switch (c.type) {
@@ -305,6 +308,8 @@ public class Game implements Serializable {
                 case EMPTY:
                 case LIMIT:
                 case FLAT:
+                    humanTableau.playCard(c);
+                    return true;
                 case STOP:
                     humanTableau.playCard(c);
                     break;
@@ -312,6 +317,43 @@ public class Game implements Serializable {
                     cpuTableau.playCard(c);
             }
             cpuPlayer.playCard(card);
+            return false;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Play a card in the human player's hand as a coup fourre.
+     * 
+     * @param card Index of the card in the player's hand.
+     * @return True if the operation succeeded, false otherwise.
+     */
+    public boolean playCoupFourre(int card) {
+        switch (humanPlayer.getCard(card).type) {
+            case EXTRA_TANK:
+                if (humanTableau.getBattleTopType() == CardType.EMPTY) {
+                    humanTableau.playCoupFourre(humanPlayer.playCard(card));
+                    humanPlayer.miles += 25;
+                    return true;
+                } else
+                    return false;
+            case PUNCTURE_PROOF:
+                if (humanTableau.getBattleTopType() == CardType.FLAT) {
+                    humanTableau.playCoupFourre(humanPlayer.playCard(card));
+                    humanPlayer.miles += 25;
+                    return true;
+                } else
+                    return false;
+            case RIGHT_OF_WAY:
+                if (humanTableau.getBattleTopType() == CardType.ACCIDENT) {
+                    humanTableau.playCoupFourre(humanPlayer.playCard(card));
+                    humanPlayer.miles += 25;
+                    return true;
+                } else
+                    return false;
+            default:
+                return false;
         }
     }
     
