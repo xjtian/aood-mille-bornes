@@ -18,15 +18,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author xtian8741
+ * Version 1.0 of the Mille Bournes game GUI.
+ * 
+ * @author Jacky Tian
  */
 public class ManualFrame extends javax.swing.JFrame {
     
     private Game game;
 
     /**
-     * Creates new form LayoutForm
+     * Creates new form ManualFrame
      */
     public ManualFrame() {
         game = new Game();

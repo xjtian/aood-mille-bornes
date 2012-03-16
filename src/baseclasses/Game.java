@@ -138,7 +138,6 @@ public class Game implements Serializable {
      * 
      * @param player Either <code>HUMAN</code> or <code>CPU</code>.
      * @return The name of the player.
-     * @throws Exception Indicates an invalid player code.
      */
     public String getPlayerName(int player) {
         if (player == HUMAN)
@@ -155,7 +154,6 @@ public class Game implements Serializable {
      * @param player 1 for human, 2 for computer.
      * @param card Index of card to play in the player's hand.
      * @return True if the move is legal, false otherwise.
-     * @throws Exception Indicates an invalid player code.
      */
     public boolean validateMove(int player, int card) {
         if (player == HUMAN) {
@@ -390,7 +388,6 @@ public class Game implements Serializable {
      * @param player Either <code>HUMAN</code> or <code>CPU</code>.
      * @return A boolean array with values corresponding to the legality of each 
      * card in the player's hand.
-     * @throws Exception Indicates an invalid player code.
      */
     public boolean[] getAllValidPlays(int player) {
         if (player == HUMAN) {
@@ -441,7 +438,6 @@ public class Game implements Serializable {
      * Add the top card of the deck to a player's hand.
      * 
      * @param player Either <code>HUMAN</code> or <code>CPU</code>.
-     * @throws Exception Indicates an invalid player code.
      */
     public void drawCard(int player) {
         if (deck.isEmpty()) {
@@ -465,7 +461,6 @@ public class Game implements Serializable {
      * 
      * @param player Either <code>HUMAN</code> or <code>CPU</code>.
      * @param card Index of card to play in the player's hand.
-     * @throws Exception Indicates an invalid player code.
      */
     public void discard(int player, int card) {
         if (player == HUMAN)
@@ -474,6 +469,12 @@ public class Game implements Serializable {
             discardPile.add(cpuPlayer.playCard(card));
     }
     
+    /**
+     * Get the miles for a player.
+     * 
+     * @param player Either <code>HUMAN</code> or <code>CPU</code>.
+     * @return The miles for the player. 
+     */
     public int getMiles(int player) {
         if (player == HUMAN)
             return humanPlayer.miles;
@@ -527,6 +528,13 @@ public class Game implements Serializable {
         g.drawString("Discard Here", 20 + (Card.CARD_WIDTH + 10) * 7, 4*Card.CARD_HEIGHT + 50);
     }
     
+    /**
+     * Get the icon of the top card of a tableau pile.
+     * 
+     * @param player Either <code>HUMAN</code> or <code>CPU</code>.
+     * @param pile Which pile to retrieve.
+     * @return An <code>ImageIcon</code> of the top card in the player's pile.
+     */
     public ImageIcon getTableauIcon(int player, int pile) {
         if (player == HUMAN)
             return humanTableau.getTableauIcon(pile);
@@ -536,6 +544,13 @@ public class Game implements Serializable {
             return null;
     }
     
+    /**
+     * Retrieve a collection of <code>ImageIcon</code>s representing all the played 
+     * safeties by a player.
+     * 
+     * @param player Either <code>HUMAN</code> or <code>CPU</code>.
+     * @return An <code>ArrayList</code> with all the icons of the cards.
+     */
     public ArrayList<ImageIcon> getSafetyIcons(int player) {
         if (player == HUMAN)
             return humanTableau.getSafetyIcons();

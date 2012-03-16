@@ -5,8 +5,12 @@
 package gui_classes;
 
 /**
- *
- * @author jacky
+ * This class is the NetBeans GUI builder's generated code for the panel in 
+ * <code>ManualFrame</code>. Note that this whole class is inside 
+ * <code>ManualFrame</code> as an inner class so that the implementation details 
+ * within <code>initComponents()</code> can be edited.
+ * 
+ * @author Jacky Tian
  */
 public class PlayingAreaPanel extends javax.swing.JPanel {
 

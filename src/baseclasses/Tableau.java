@@ -28,8 +28,17 @@ public final class Tableau implements Serializable {
      */
     protected int played200;
     
+    /**
+     * Integer code for battle pile.
+     */
     public static final int BATTLE = 1;
+    /**
+     * Integer code for speed pile.
+     */
     public static final int SPEED = 2;
+    /**
+     * Integer code for distance pile.
+     */
     public static final int DISTANCE = 3;
     
     private ArrayList<Card> safetyPile;
@@ -399,6 +408,12 @@ public final class Tableau implements Serializable {
         }
     }
     
+    /**
+     * Get the icon of the top card of a tableau pile.
+     * 
+     * @param pile Which of the three valid piles to retrieve.
+     * @return An <code>ImageIcon</code> of the top card of the pile.
+     */
     public ImageIcon getTableauIcon(int pile) {
         Card top;
         
@@ -430,6 +445,12 @@ public final class Tableau implements Serializable {
         return new ImageIcon(top.sprite.getScaledInstance(Card.CARD_WIDTH, Card.CARD_HEIGHT, Image.SCALE_FAST));
     }
     
+    /**
+     * Get the icons of all played safety cards in a collection.
+     * 
+     * @return An <code>ArrayList</code> of <code>ImageIcon</code>s of the cards 
+     * in the safety pile.
+     */
     public ArrayList<ImageIcon> getSafetyIcons() {
         ArrayList<ImageIcon> back = new ArrayList<ImageIcon>();
         for (Card c : safetyPile) {

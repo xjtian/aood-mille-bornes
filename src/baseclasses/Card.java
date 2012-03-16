@@ -2,12 +2,10 @@ package baseclasses;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 
 /**
@@ -25,6 +23,9 @@ public final class Card implements Serializable {
      * Which card this card is. Also contains information such as name.
      */
     protected CardType type;
+    /**
+     * The image of the card.
+     */
     protected BufferedImage sprite;
     /**
      * Whether or not the card is played as a coup-fourre.
@@ -130,12 +131,5 @@ public final class Card implements Serializable {
     @Override
     public String toString() {
         return type.toString();
-    }
-    
-    public javax.swing.JLabel getComponent() {
-        if (sprite == null)
-            loadImage();
-        return new javax.swing.JLabel(new ImageIcon(sprite.getScaledInstance(
-                Card.CARD_WIDTH, Card.CARD_HEIGHT, Image.SCALE_FAST)));
     }
 }
