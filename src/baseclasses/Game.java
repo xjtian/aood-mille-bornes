@@ -303,11 +303,33 @@ public class Game implements Serializable {
                     cpuTableau.playCard(c);
                     break;
                 case ACCIDENT:
+                    humanTableau.playCard(c);
+                    for (int i = 0; i < humanPlayer.getHandSize(); i++) {
+                        if (humanPlayer.getCard(i).type == CardType.RIGHT_OF_WAY)
+                            return true;
+                    }
+                    return false;
                 case EMPTY:
+                    humanTableau.playCard(c);
+                    for (int i = 0; i < humanPlayer.getHandSize(); i++) {
+                        if (humanPlayer.getCard(i).type == CardType.EXTRA_TANK)
+                            return true;
+                    }
+                    return false;
                 case LIMIT:
+                    humanTableau.playCard(c);
+                    for (int i = 0; i < humanPlayer.getHandSize(); i++) {
+                        if (humanPlayer.getCard(i).type == CardType.DRIVING_ACE)
+                            return true;
+                    }
+                    return false;
                 case FLAT:
                     humanTableau.playCard(c);
-                    return true;
+                    for (int i = 0; i < humanPlayer.getHandSize(); i++) {
+                        if (humanPlayer.getCard(i).type == CardType.PUNCTURE_PROOF)
+                            return true;
+                    }
+                    return false;
                 case STOP:
                     humanTableau.playCard(c);
                     break;
