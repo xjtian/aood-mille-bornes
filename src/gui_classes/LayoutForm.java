@@ -35,6 +35,9 @@ public class LayoutForm extends javax.swing.JFrame {
         card5 = new javax.swing.JLabel();
         card6 = new javax.swing.JLabel();
         card7 = new javax.swing.JLabel();
+        menuBar = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -65,6 +68,14 @@ public class LayoutForm extends javax.swing.JFrame {
         card6.setPreferredSize(new java.awt.Dimension(50, 69));
 
         card7.setPreferredSize(new java.awt.Dimension(50, 69));
+
+        jMenu1.setText("File");
+        menuBar.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        menuBar.add(jMenu2);
+
+        setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -104,7 +115,7 @@ public class LayoutForm extends javax.swing.JFrame {
                     .addComponent(card5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(112, Short.MAX_VALUE))
+                .addContainerGap(91, Short.MAX_VALUE))
         );
 
         pack();
@@ -159,6 +170,9 @@ public class LayoutForm extends javax.swing.JFrame {
     private javax.swing.JLabel card5;
     private javax.swing.JLabel card6;
     private javax.swing.JLabel card7;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
 }

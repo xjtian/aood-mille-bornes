@@ -26,7 +26,7 @@ public final class Card implements Serializable {
     /**
      * The image of the card.
      */
-    protected BufferedImage sprite;
+    protected transient BufferedImage sprite;
     /**
      * Whether or not the card is played as a coup-fourre.
      */

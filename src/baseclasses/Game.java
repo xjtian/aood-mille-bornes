@@ -45,6 +45,18 @@ public class Game implements Serializable {
      */
     public static final int WIDTH = 600;
     /**
+     * Means last play was a safety card.
+     */
+    public static final int SAFETY = 3;
+    /**
+     * Means human player is eligible to respond to last play with a coup fourre.
+     */
+    public static final int COUP = 4;
+    /**
+     * Means last move was a normal move.
+     */
+    public static final int NORMAL = 5;
+    /**
      * Mandatory color for the background of all GUIs. Note that this is the default 
      * background color for all swing components. Hack around black background 
      * of a rotated BufferedImage.
@@ -238,7 +250,7 @@ public class Game implements Serializable {
      * @throws Exception Check the message to see if the error is an illegal move, 
      * invalid player code, or logical differences between Tableau and Game.
      */
-    public boolean makeMove(int player, int card) throws Exception {
+    public int makeMove(int player, int card) throws Exception {
         if (!validateMove(player, card))
             throw new Exception("Illegal Move");
         
@@ -273,11 +285,18 @@ public class Game implements Serializable {
                 case STOP:
                     cpuTableau.playCard(c);
                     break;
+                case DRIVING_ACE:
+                case RIGHT_OF_WAY:
+                case PUNCTURE_PROOF:
+                case EXTRA_TANK:
+                    humanTableau.playCard(c);
+                    humanPlayer.playCard(card);
+                    return SAFETY;
                 default:
                     humanTableau.playCard(c);
             }
             humanPlayer.playCard(card);
-            return false;
+            return NORMAL;
         } else if (player == CPU) {
             Card c = cpuPlayer.getCard(card);
             switch (c.type) {
@@ -304,77 +323,76 @@ public class Game implements Serializable {
                     break;
                 case ACCIDENT:
                     humanTableau.playCard(c);
+                    cpuPlayer.playCard(card);
                     for (int i = 0; i < humanPlayer.getHandSize(); i++) {
                         if (humanPlayer.getCard(i).type == CardType.RIGHT_OF_WAY)
-                            return true;
+                            return COUP;
                     }
-                    return false;
+                    return NORMAL;
                 case EMPTY:
                     humanTableau.playCard(c);
+                    cpuPlayer.playCard(card);
                     for (int i = 0; i < humanPlayer.getHandSize(); i++) {
                         if (humanPlayer.getCard(i).type == CardType.EXTRA_TANK)
-                            return true;
+                            return COUP;
                     }
-                    return false;
+                    return NORMAL;
                 case LIMIT:
                     humanTableau.playCard(c);
-                    for (int i = 0; i < humanPlayer.getHandSize(); i++) {
-                        if (humanPlayer.getCard(i).type == CardType.DRIVING_ACE)
-                            return true;
-                    }
-                    return false;
+                    break;
                 case FLAT:
                     humanTableau.playCard(c);
+                    cpuPlayer.playCard(card);
                     for (int i = 0; i < humanPlayer.getHandSize(); i++) {
                         if (humanPlayer.getCard(i).type == CardType.PUNCTURE_PROOF)
-                            return true;
+                            return COUP;
                     }
-                    return false;
+                    return NORMAL;
                 case STOP:
                     humanTableau.playCard(c);
                     break;
+                case DRIVING_ACE:
+                case EXTRA_TANK:
+                case PUNCTURE_PROOF:
+                case RIGHT_OF_WAY:
+                    cpuTableau.playCard(c);
+                    cpuPlayer.playCard(card);
+                    return SAFETY;
                 default:
                     cpuTableau.playCard(c);
             }
             cpuPlayer.playCard(card);
-            return false;
+            return NORMAL;
         } else {
-            return false;
+            return NORMAL;
         }
     }
     
     /**
      * Play a card in the human player's hand as a coup fourre.
-     * 
-     * @param card Index of the card in the player's hand.
-     * @return True if the operation succeeded, false otherwise.
      */
-    public boolean playCoupFourre(int card) {
-        switch (humanPlayer.getCard(card).type) {
-            case EXTRA_TANK:
-                if (humanTableau.getBattleTopType() == CardType.EMPTY) {
-                    humanTableau.playCoupFourre(humanPlayer.playCard(card));
-                    humanPlayer.miles += 25;
-                    return true;
-                } else
-                    return false;
-            case PUNCTURE_PROOF:
-                if (humanTableau.getBattleTopType() == CardType.FLAT) {
-                    humanTableau.playCoupFourre(humanPlayer.playCard(card));
-                    humanPlayer.miles += 25;
-                    return true;
-                } else
-                    return false;
-            case RIGHT_OF_WAY:
-                if (humanTableau.getBattleTopType() == CardType.ACCIDENT) {
-                    humanTableau.playCoupFourre(humanPlayer.playCard(card));
-                    humanPlayer.miles += 25;
-                    return true;
-                } else
-                    return false;
-            default:
-                return false;
+    public void playCoupFourre() {
+        switch (humanTableau.getBattleTopType()) {
+            case EMPTY:
+                for (int i = 0; i < humanPlayer.getHandSize(); i++) {
+                    if (humanPlayer.getCard(i).type == CardType.EXTRA_TANK)
+                        humanTableau.playCoupFourre(humanPlayer.playCard(i));
+                }
+                break;
+            case ACCIDENT:
+                for (int i = 0; i < humanPlayer.getHandSize(); i++) {
+                    if (humanPlayer.getCard(i).type == CardType.RIGHT_OF_WAY)
+                        humanTableau.playCoupFourre(humanPlayer.playCard(i));
+                }
+                break;
+            case FLAT:
+                for (int i = 0; i < humanPlayer.getHandSize(); i++) {
+                    if (humanPlayer.getCard(i).type == CardType.PUNCTURE_PROOF)
+                        humanTableau.playCoupFourre(humanPlayer.playCard(i));
+                }
+                break;
         }
+        humanPlayer.miles += 25;
     }
     
     /**
@@ -442,6 +460,10 @@ public class Game implements Serializable {
             return HUMAN;
         else if (cpuPlayer.miles == 1000)
             return CPU;
+        else if (humanPlayer.miles >= 900 && cpuPlayer.miles == 0)
+            return HUMAN;
+        else if (cpuPlayer.miles >= 900 && humanPlayer.miles == 0)
+            return CPU;
         else
             return 0;
     }
@@ -467,7 +489,7 @@ public class Game implements Serializable {
             ArrayList<Card> cc = cpuTableau.shuffleNewDeck();
             deck.addAll(hc);
             deck.addAll(cc);
-            for (int i = discardPile.size() - 1; i > 0; i--) {
+            for (int i = discardPile.size() - 1; i >= 0; i--) {
                 deck.add(discardPile.remove(i));
             }
             shuffleDeck();
@@ -507,21 +529,21 @@ public class Game implements Serializable {
     }
     
     /**
+     * Returns the size of the deck.
+     * 
+     * @return The size of the deck.
+     */
+    public int getDeckSize() {
+        return deck.size();
+    }
+    
+    /**
      * Quit the game by nullifying all instance variables.
      */
     public void quit() {
         cpuPlayer = humanPlayer = null;
         cpuTableau = humanTableau = null;
         deck = discardPile = null;
-    }
-    
-    /**
-     * Return a pointer to this object for serialization.
-     * 
-     * @return This <code>Game</code> object.
-     */
-    public Game save() {
-        return this;
     }
     
     /**
@@ -548,6 +570,22 @@ public class Game implements Serializable {
         }
         
         g.drawString("Discard Here", 20 + (Card.CARD_WIDTH + 10) * 7, 4*Card.CARD_HEIGHT + 50);
+    }
+    
+    /**
+     * Get the icon of the top card of the discard pile.
+     * 
+     * @return An <code>ImageIcon</code> of the top card in the discard pile.
+     */
+    public ImageIcon getDiscardIcon() {
+        if (! discardPile.isEmpty()) {
+            Card c = discardPile.get(discardPile.size() - 1);
+            if (c.sprite == null)
+                c.loadImage();
+            return new ImageIcon(c.sprite.getScaledInstance(
+                    Card.CARD_WIDTH, Card.CARD_HEIGHT, Image.SCALE_FAST));
+        } else
+            return null;
     }
     
     /**
@@ -591,6 +629,7 @@ public class Game implements Serializable {
     public ImageIcon getCardIcon(int card) {
         if (humanPlayer.getCard(card).sprite == null)
             humanPlayer.getCard(card).loadImage();
-        return new ImageIcon(humanPlayer.getCard(card).sprite.getScaledInstance(Card.CARD_WIDTH, Card.CARD_HEIGHT, Image.SCALE_FAST));
+        return new ImageIcon(humanPlayer.getCard(card).sprite.getScaledInstance(
+                Card.CARD_WIDTH, Card.CARD_HEIGHT, Image.SCALE_FAST));
     }
 }

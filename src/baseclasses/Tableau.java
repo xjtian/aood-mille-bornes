@@ -129,7 +129,7 @@ public final class Tableau implements Serializable {
      * @param c <code>Card</code> to be played.
      */
     public void playCoupFourre(Card c) {
-        c.sideways = true;
+        c.turnSideways();
         safetyPile.add(c);
     }
     
