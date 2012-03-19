@@ -66,7 +66,7 @@ public final class Card implements Serializable {
             return false;
         }
         
-        if (sideways)
+        if (sideways && sprite != null)
             rotateSprite();
         
         return true;
@@ -80,6 +80,9 @@ public final class Card implements Serializable {
             sideways = true;
             if (sprite != null)
                 rotateSprite();
+            else {
+                loadImage();
+            }
         }
     }
     
