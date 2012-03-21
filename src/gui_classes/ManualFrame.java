@@ -333,14 +333,37 @@ public class ManualFrame extends javax.swing.JFrame {
     }
     
     private void checkWin() {
+        int choice;
         switch (game.isOver()) {
             case Game.CPU:
-                JOptionPane.showMessageDialog(this, "The Computer Wins!", "Loser", JOptionPane.INFORMATION_MESSAGE);
-                System.exit(0);
+                choice = JOptionPane.showConfirmDialog(this, "The Computer Wins! Play Again?", "Loser", JOptionPane.YES_NO_OPTION);
+                if (choice == JOptionPane.YES_OPTION) {
+                    String name = game.getPlayerName(Game.HUMAN);
+                    game = new Game();
+                    game.drawAllCards();
+                    game.setPlayerName(name);
+                    game.drawCard(Game.HUMAN);
+                    playingArea.updateTableaus();
+                    regenIcons();
+                } else {
+                    this.dispose();
+                    System.exit(0);
+                }
                 break;
             case Game.HUMAN:
-                JOptionPane.showMessageDialog(this, "You Win!", "Winner", JOptionPane.INFORMATION_MESSAGE);
-                System.exit(0);
+                choice = JOptionPane.showConfirmDialog(this, "You Win! Play Again?", "Winner", JOptionPane.YES_NO_OPTION);
+                if (choice == JOptionPane.YES_OPTION) {
+                    String name = game.getPlayerName(Game.HUMAN);
+                    game = new Game();
+                    game.drawAllCards();
+                    game.setPlayerName(name);
+                    game.drawCard(Game.HUMAN);
+                    playingArea.updateTableaus();
+                    regenIcons();
+                } else {
+                    this.dispose();
+                    System.exit(0);
+                }
                 break;
         }
     }
@@ -573,6 +596,7 @@ public class ManualFrame extends javax.swing.JFrame {
         // </editor-fold>
         
         public void updateTableaus() {
+            clearIcons();
             cpuBattle.setIcon(game.getTableauIcon(Game.CPU, Tableau.BATTLE));
             cpuDist.setIcon(game.getTableauIcon(Game.CPU, Tableau.DISTANCE));
             cpuSpeed.setIcon(game.getTableauIcon(Game.CPU, Tableau.SPEED));
@@ -599,6 +623,18 @@ public class ManualFrame extends javax.swing.JFrame {
             cpuMileLbl.setText("CPU Miles: " + game.getMiles(Game.CPU));
             hMileLbl.setText(game.getPlayerName(Game.HUMAN) + "'s Miles: " + game.getMiles(Game.HUMAN));
             deckLbl.setText("In Deck: " + game.getDeckSize());
+        }
+        
+        private void clearIcons() {
+            cpuSafe4.setIcon(null);
+            cpuSafe3.setIcon(null);
+            cpuSafe2.setIcon(null);
+            cpuSafe1.setIcon(null);
+            
+            hSafe4.setIcon(null);
+            hSafe3.setIcon(null);
+            hSafe2.setIcon(null);
+            hSafe1.setIcon(null);
         }
         
         // GUI components for the panel
