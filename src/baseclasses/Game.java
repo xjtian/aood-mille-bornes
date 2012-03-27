@@ -403,122 +403,23 @@ public class Game implements Serializable {
     public int generateCPUMove() {
         //@TODO: Currently Stubbed. Complete the AI algorithm.
         boolean[] valids = getAllValidPlays(CPU);
-        //1st choice- remove hazard by playing safety. 2nd-remove hazard w/ remedy. 3rd-remove speed limit
-        //If stopped and no hazard, play GO card
-        //Last- choose between playing mileage and attack card.
-        //If computer score is higher than player score, play attack card
-        // If computer is lower than player, play highest mileage- unless will put over limit
+        
         int counter = 0;
         for (int i = 0; i < valids.length; i++) {
             if (valids[i])
                 counter++;
         }
         
-        if (counter == 0) {
-            //@TODO: discard best card
-            throw new UnsupportedOperationException();
-        } else {
-            //@TODO: pick a card
-            int index;
-            switch (cpuTableau.getBattleTopType()) {
-                case EMPTY:
-                    index = findCardIndex(valids, CardType.EXTRA_TANK);
-                    if (index != -1) {
-                        return index;
-                    } else if(true) {
-                        index = findCardIndex(valids, CardType.GAS);
-                        if(index != -1) {
-                            return index;
-                        }
-                    } else  {
-                        index = findCardIndex(valids, CardType.ROAD_SERVICE);
-                        if(index != -1) {
-                            return index;
-                        }
-                    }
-                    break;
-                case FLAT:
-                    index = findCardIndex(valids, CardType.PUNCTURE_PROOF);
-                    if (index != -1) {
-                        return index;
-                    } else if(true) {
-                        index = findCardIndex(valids, CardType.SPARE);
-                        if(index != -1) {
-                            return index;
-                        }
-                    } else  {
-                        index = findCardIndex(valids, CardType.ROAD_SERVICE);
-                        if(index != -1) {
-                            return index;
-                        }
-                    }
-                    break;
-                case ACCIDENT:
-                    index = findCardIndex(valids, CardType.DRIVING_ACE);
-                    if (index != -1) {
-                        return index;
-                    } else if(true) {
-                        index = findCardIndex(valids, CardType.REPAIR);
-                        if(index != -1) {
-                            return index;
-                        }
-                    } else  {
-                        index = findCardIndex(valids, CardType.ROAD_SERVICE);
-                        if(index != -1) {
-                            return index;
-                        }
-                    }
-                    break;
-                case STOP:
-                    index = findCardIndex(valids, CardType.ROLL);
-                    if (index != -1) {
-                        return index;
-                    }
-                    index = findCardIndex(valids, CardType.D200);
-                    if (index != -1) {
-                        return index;
-                    }
-                    break;
-            }
-            if(cpuTableau.validMove(new Card(CardType.END_LIMIT))) {
-                for(int i = 0; i < 7; i++)  {
-                    Card c = cpuPlayer.getCard(i);
-                    if(c.type == CardType.END_LIMIT)    {
-                        return i;
-                    }
-                }
-            }
-            
-                    
-                    
-                    
-                    throw new UnsupportedOperationException();
-            }
-        //        if (counter == 0)
-//            return -1;
-//        else {
-//            for (int i = 0; i < valids.length; i++) {
-//                if (valids[i])
-//                    return i;
-//            }
-//            return -1;
-//        }
-        }
-        
-
-        
-    //Assume boolean[] legnth is Seven
-    private int findCardIndex(boolean[] validMoves, CardType cardT)  {
-        for(int i = 0; i < validMoves.length; i++) {
-            if(validMoves[i])   {
-                if(cpuPlayer.getCard(i).type == cardT)  {
+        if (counter == 0)
+            return -1;
+        else {
+            for (int i = 0; i < valids.length; i++) {
+                if (valids[i])
                     return i;
-                }    
             }
+            return -1;
         }
-        return -1;
     }
-    
     
     /**
      * Generate a boolean array to indicate which cards in a player's hand are 
