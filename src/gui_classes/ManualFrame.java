@@ -261,6 +261,8 @@ public class ManualFrame extends javax.swing.JFrame {
         menuBar.add(fileMenu);
         setJMenuBar(menuBar);
         
+        this.setTitle("Mille Bornes");
+        
         resetCards();
         pack();
     }
@@ -370,7 +372,7 @@ public class ManualFrame extends javax.swing.JFrame {
     
     private void cardDragged(MouseEvent evt) {
         Point drag = evt.getLocationOnScreen();
-        drag.translate(- this.getLocationOnScreen().x, - this.getLocationOnScreen().y);
+        drag.translate(- this.getLocationOnScreen().x - 30, - this.getLocationOnScreen().y - 90);
         evt.getComponent().setLocation(drag);
     }
     
