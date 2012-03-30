@@ -67,14 +67,16 @@ public class Game implements Serializable {
      * Instantiates the discard pile and both players and populates the deck.
      */
     public Game() {
-        discardPile = new ArrayList<Card>();
-        deck = new ArrayList<Card>();
+        discardPile = new ArrayList<>();
+        deck = new ArrayList<>();
         humanPlayer = new Player();
         cpuPlayer = new Player();
         cpuPlayer.name = "Computer";
+        humanPlayer.name = "Player";
         
         humanTableau = new Tableau();
         cpuTableau = new Tableau();
+        
         populateDeck();
     }
     
@@ -535,15 +537,6 @@ public class Game implements Serializable {
      */
     public int getDeckSize() {
         return deck.size();
-    }
-    
-    /**
-     * Quit the game by nullifying all instance variables.
-     */
-    public void quit() {
-        cpuPlayer = humanPlayer = null;
-        cpuTableau = humanTableau = null;
-        deck = discardPile = null;
     }
     
     /**

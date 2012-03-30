@@ -29,7 +29,7 @@ public class Player implements Serializable {
      * Default constructor to make a player with no name.
      */
     public Player() {
-        hand = new ArrayList<Card>();
+        hand = new ArrayList<>();
         name = "No Name.";
         miles = 0;
     }

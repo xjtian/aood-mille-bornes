@@ -50,10 +50,10 @@ public final class Tableau implements Serializable {
      * Default constructor that instantiates all fields.
      */
     public Tableau() {
-        safetyPile = new ArrayList<Card>();
-        speedPile = new ArrayList<Card>();
-        battlePile = new ArrayList<Card>();
-        distancePile = new ArrayList<Card>();
+        safetyPile = new ArrayList<>();
+        speedPile = new ArrayList<>();
+        battlePile = new ArrayList<>();
+        distancePile = new ArrayList<>();
         played200 = 0;
     }
     

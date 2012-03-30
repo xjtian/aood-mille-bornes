@@ -35,8 +35,6 @@ public class ManualFrame extends javax.swing.JFrame {
     public ManualFrame() {
         game = new Game();
         game.drawAllCards();
-        String name = JOptionPane.showInputDialog(rootPane, "Your Name?");
-        game.setPlayerName(name);
         initComponents();
         
         startGame();
@@ -122,6 +120,15 @@ public class ManualFrame extends javax.swing.JFrame {
     private void startGame() {
         game.drawCard(Game.HUMAN);
         regenIcons();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                String name = JOptionPane.showInputDialog(rootPane, "Your Name?");
+                if (name != null && !name.equals("") && name.split("\\s+").length > 0)
+                    game.setPlayerName(name);
+                playingArea.updateText();
+            }
+        });
     }
     
     // <editor-fold defaultstate="collapsed" desc="Layout Methods">
@@ -262,6 +269,7 @@ public class ManualFrame extends javax.swing.JFrame {
         setJMenuBar(menuBar);
         
         this.setTitle("Mille Bornes");
+        playingArea.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         
         resetCards();
         pack();
@@ -396,6 +404,8 @@ public class ManualFrame extends javax.swing.JFrame {
         
         int y = which.getY();
         resetCards();
+        
+        System.out.println(playingArea.getSize());
         
         if (y < 550) {
             makeUserMove(choice);
@@ -622,6 +632,10 @@ public class ManualFrame extends javax.swing.JFrame {
             }
             discardLbl.setIcon(game.getDiscardIcon());
             
+            updateText();
+        }
+        
+        public void updateText() {
             cpuMileLbl.setText("CPU Miles: " + game.getMiles(Game.CPU));
             hMileLbl.setText(game.getPlayerName(Game.HUMAN) + "'s Miles: " + game.getMiles(Game.HUMAN));
             deckLbl.setText("In Deck: " + game.getDeckSize());

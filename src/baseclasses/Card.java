@@ -2,10 +2,12 @@ package baseclasses;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 
 /**
@@ -134,5 +136,24 @@ public final class Card implements Serializable {
     @Override
     public String toString() {
         return type.toString();
+    }
+    
+    /**
+     * Generate the <code>ImageIcon</code> of a given card type.
+     * 
+     * @param ct The <code>CardType</code> to generate the icon for.
+     * @return An <code>ImageIcon</code> of the card scaled to the standard size 
+     * of a card.
+     */
+    public static ImageIcon generateIcon(CardType ct) {
+        BufferedImage bi;
+        try {
+            bi = ImageIO.read(Card.class.getClass().getResource("/baseclasses/resources/" + ct.getPath()));
+        } catch (IOException ex) {
+            return null;
+        }
+        
+        return new ImageIcon(bi.getScaledInstance(
+                Card.CARD_WIDTH, Card.CARD_HEIGHT, Image.SCALE_FAST));
     }
 }
