@@ -190,7 +190,7 @@ public final class Tableau implements Serializable {
      * @return an <code>ArrayList</code> populated with each removed card.
      */
     public ArrayList<Card> shuffleNewDeck() {
-        ArrayList<Card> temp = new ArrayList<Card>();
+        ArrayList<Card> temp = new ArrayList<>();
         
         for (int i = speedPile.size() - 2; i >= 0; i--) {
             temp.add(speedPile.remove(i));
@@ -452,7 +452,7 @@ public final class Tableau implements Serializable {
      * in the safety pile.
      */
     public ArrayList<ImageIcon> getSafetyIcons() {
-        ArrayList<ImageIcon> back = new ArrayList<ImageIcon>();
+        ArrayList<ImageIcon> back = new ArrayList<>();
         for (Card c : safetyPile) {
             if (c.sprite == null)
                 c.loadImage();

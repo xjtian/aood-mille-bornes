@@ -21,14 +21,14 @@ import java.util.Random;
 import javax.swing.*;
 
 /**
- * Version 1.0 of the Mille Bournes game GUI.
+ * Version 1.1 of the Mille Bournes game GUI.
  * 
  * @author Jacky Tian
  */
 public class ManualFrame extends javax.swing.JFrame {
     
     private Game game;
-
+    
     /**
      * Creates new form ManualFrame
      */
@@ -186,6 +186,7 @@ public class ManualFrame extends javax.swing.JFrame {
         card7 = new CardLabel(6);
         menuBar = new JMenuBar();
         fileMenu = new JMenu();
+        helpMenu = new JMenu();
         playingArea = new PlayingPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -231,6 +232,7 @@ public class ManualFrame extends javax.swing.JFrame {
         JMenuItem load = new JMenuItem("Load");
         JMenuItem quit = new JMenuItem("Quit");
         JMenuItem newgame = new JMenuItem("New Game");
+        JMenuItem rules = new JMenuItem("Rules");
         
         save.addActionListener(new ActionListener() {
             @Override
@@ -260,12 +262,27 @@ public class ManualFrame extends javax.swing.JFrame {
             }
         });
         
+        rules.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        new RulesFrame().setVisible(true);
+                    }
+                });
+            }
+        });
+        
         fileMenu.setText("File");
         fileMenu.add(newgame);
         fileMenu.add(save);
         fileMenu.add(load);
         fileMenu.add(quit);
+        helpMenu.setText("Help");
+        helpMenu.add(rules);
         menuBar.add(fileMenu);
+        menuBar.add(helpMenu);
         setJMenuBar(menuBar);
         
         this.setTitle("Mille Bornes");
@@ -380,7 +397,7 @@ public class ManualFrame extends javax.swing.JFrame {
     
     private void cardDragged(MouseEvent evt) {
         Point drag = evt.getLocationOnScreen();
-        drag.translate(- this.getLocationOnScreen().x - 30, - this.getLocationOnScreen().y - 90);
+        drag.translate(- this.getLocationOnScreen().x - 30, - this.getLocationOnScreen().y - 85);
         evt.getComponent().setLocation(drag);
     }
     
@@ -403,11 +420,10 @@ public class ManualFrame extends javax.swing.JFrame {
             choice = 6;
         
         int y = which.getY();
+        int h = playingArea.getHeight();
         resetCards();
         
-        System.out.println(playingArea.getSize());
-        
-        if (y < 550) {
+        if (y <= h + 80) {
             makeUserMove(choice);
         } else {
             makeUserDiscard(choice);
@@ -442,6 +458,7 @@ public class ManualFrame extends javax.swing.JFrame {
     private PlayingPanel playingArea;
     private JMenuBar menuBar;
     private JMenu fileMenu;
+    private JMenu helpMenu;
     
     private class CardLabel extends JLabel {
         
